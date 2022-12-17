@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------- 用户 --------------------------------------
+
+model User {
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  password String
+  phone    String?
+  email    String? @unique
+  salt     String
+
+  project Project[]
+}
+
+// ---------------------------------- 事件 -------------------------------------
+
+enum EventType {
+  ATOM // 原子事件
+  COLLECTION // 集合事件
+}
+
+model Event {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  unit  Int
+  start DateTime
+  end   DateTime
+
+  color String @default("#93c5fd")
+
+  type EventType @default(ATOM)
+
+  // 事件可以没有详细描述
+  content   EventContent? @relation()
+  contentId Int?
+
+  todos      EventTodo[]
+  characters Character[]
+  scence     Scence[]
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int
+}
+
+model EventContent {
+  id Int @id @default(autoincrement())
+
+  updatedAt DateTime @updatedAt
+
+  content String
+
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId Int   @unique
+}
+
+model EventTodo {
+  id Int @id @default(autoincrement())
+
+  name    String
+  content String
+  type    String?
+  done    Boolean @default(false)
+
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId Int
+}
+
+// ----------------------------------- 角色 & 场景 --------------------------------------
+
+model Character {
+  id Int @id @default(autoincrement())
+
+  name        String
+  alias       String[]
+  description String?
+
+  unit  Int?
+  start DateTime?
+  end   DateTime?
+
+  events Event[]
+
+  // 角色可以复用到其他项目中
+  projects Project[]
+}
+
+model Scence {
+  id Int @id @default(autoincrement())
+
+  name        String
+  alias       String[]
+  description String?
+
+  unit  Int?
+  start DateTime?
+  end   DateTime?
+
+  events Event[]
+
+  // 某个场景可能是另一个场景的子场景，因此需要自引用
+  super   Scence?  @relation("contains", fields: [superId], references: [id])
+  superId Int?     @unique
+  subs    Scence[] @relation("contains")
+
+  // 场景可以复用到其他项目中
+  projects Project[]
+}
+
+// ----------------------------------- 设定 -------------------------------------
+
+model Backdrop {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String?
+
+  // TODO 完善背景设定的字段
+
+  // 背景设定可以复用到其他项目中
+  projects Project[]
+}
+
+// ----------------------------------- 项目 --------------------------------------
+
+model Project {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // 数据库不太关心这些字段的内容，因此简单的使用JSON存储，由前端决定如何解析
+  settings  Json?
+  workspace Json?
+
+  events     Event[]
+  characters Character[]
+  scences    Scence[]
+  backdrops  Backdrop[]
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+}

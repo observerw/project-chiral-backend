@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "aaron-bond.better-comments",
+        "stackbreak.comment-divider",
+        "dbaeumer.vscode-eslint",
+        "gruntfuggly.todo-tree",
+        "prisma.prisma"
+    ]
+}
