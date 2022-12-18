@@ -9,6 +9,7 @@ import type { UpdateContentDto } from './dto/content/update-content.dto'
 import type { CreateEventDto } from './dto/event/create-event.dto'
 import type { UpdateEventDto } from './dto/event/update-event.dto'
 import { EventContentEntity } from './entities/event-content.entity'
+import { EventDetailEntity } from './entities/event-detail.entity'
 import { EventEntity } from './entities/event.entity'
 import { GraphService } from './graph/graph.service'
 
@@ -52,6 +53,22 @@ export class EventService {
     })
 
     return results.map(v => plainToInstance(EventEntity, v))
+  }
+
+  async getEventDetail(id: number) {
+    const [event, superEvents, superGraphs, subGraphs] = await Promise.all([
+      this.getEvent(id),
+      this.graphService.getSuperEvents(id),
+      this.graphService.getSubGraphs(id),
+      this.graphService.getSubGraphs(id),
+    ])
+
+    return plainToInstance(EventDetailEntity, {
+      ...event,
+      superEvents,
+      superGraphs,
+      subGraphs,
+    })
   }
 
   /**

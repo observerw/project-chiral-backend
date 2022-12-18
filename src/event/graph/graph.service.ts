@@ -96,7 +96,7 @@ export class GraphService {
   /**
    * 查询某个事件属于哪些图
    */
-  async getOwnerGraphs(eventId: number) {
+  async getSuperGraphs(eventId: number) {
     return (await this.cypherService
       .match([
         node('graph', EVENT_GRAPH),
@@ -109,11 +109,26 @@ export class GraphService {
   }
 
   /**
+   * 查询某个事件包含哪些图
+   */
+  async getSubGraphs(eventId: number) {
+    return (await this.cypherService
+      .match([
+        node([EVENT], { id: eventId }),
+        relation('out', [CONTAINS]),
+        node('graph', [EVENT_GRAPH]),
+      ])
+      .return('graph')
+      .run())
+      .map(r => plainToInstance(GraphNodeEntity, r.graph))
+  }
+
+  /**
    * 查询某个事件属于哪些集合事件
    *
    * 查询方法为：查询某个事件属于哪些图，然后查询这些图属于哪些集合事件
    */
-  async getOwnerEvents(eventId: number) {
+  async getSuperEvents(eventId: number) {
     const eventIds = (await this.cypherService
       .match([
         node('event', EVENT),
