@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { CypherService } from 'src/database/cypher/cypher.service'
-import { PrismaService } from 'src/database/prisma/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { GraphService } from './graph.service'
 import { GraphController } from './graph.controller'
 

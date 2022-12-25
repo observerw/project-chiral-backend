@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { PrismaService } from 'src/database/prisma/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { CypherService } from 'src/database/cypher/cypher.service'
 import { EventService } from './event.service'
 import { EventController } from './event.controller'

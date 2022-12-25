@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
-import { PrismaService } from 'src/database/prisma/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { getProjectId, getUserId } from 'src/utils/get-header'
 import type { CreateProjectDto } from './dto/create-project.dto'
 import type { CreateSettingsDto } from './dto/create-settings.dto'

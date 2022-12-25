@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
-import { PrismaService } from 'src/database/prisma/prisma.service'
+import { PrismaService } from 'nestjs-prisma'
 import { encryptPassword, generateSalt } from 'src/utils/crypto'
 import type { CreateUserDto } from './dto/create-user.dto'
 import { UserEntity } from './entities/user.entity'

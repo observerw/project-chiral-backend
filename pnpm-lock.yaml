@@ -36,6 +36,7 @@ specifiers:
   lodash: ^4.17.21
   neo4j-driver: ^5.3.0
   nest-neo4j: ^0.2.0
+  nestjs-prisma: ^0.19.0
   nestjs-request-context: ^2.1.0
   passport: ^0.6.0
   passport-jwt: ^4.0.0
@@ -101,6 +102,7 @@ devDependencies:
   eslint: 8.30.0
   eslint-plugin-unused-imports: 2.0.0_juver2u3xbiwnjfu6d55vmnoem
   jest: 28.1.3_b6etc7xurivcjmbbbvo5ydauxy
+  nestjs-prisma: 0.19.0_chrdn5qd4kbnffoab4k2pkqiay
   prisma: 4.8.0
   prisma-merge: 0.2.0
   source-map-support: 0.5.21
@@ -120,6 +122,23 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.17
+    dev: true
+
+  /@angular-devkit/core/13.3.10:
+    resolution: {integrity: sha512-NSjyrccES+RkVL/wt1t1jNmJOV9z5H4/DtVjJQbAt/tDE5Mo0ygnhELd/QiUmjVfzfSkhr75LqQD8NtURoGBwQ==}
+    engines: {node: ^12.20.0 || ^14.15.0 || >=16.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    peerDependencies:
+      chokidar: ^3.5.2
+    peerDependenciesMeta:
+      chokidar:
+        optional: true
+    dependencies:
+      ajv: 8.9.0
+      ajv-formats: 2.1.1_ajv@8.9.0
+      fast-json-stable-stringify: 2.1.0
+      magic-string: 0.25.7
+      rxjs: 6.6.7
+      source-map: 0.7.3
     dev: true
 
   /@angular-devkit/core/14.2.1:
@@ -183,6 +202,19 @@ packages:
       inquirer: 8.2.4
       symbol-observable: 4.0.0
       yargs-parser: 21.1.1
+    transitivePeerDependencies:
+      - chokidar
+    dev: true
+
+  /@angular-devkit/schematics/13.3.10:
+    resolution: {integrity: sha512-/G0xInGBfFiJJQET3nKMe8V7Ny+fcxAZsXxFuOpuH2jfKqty9JMmuJw6ll5qEP0h3NnKPsF+9J1Gvq8Bmb4uDQ==}
+    engines: {node: ^12.20.0 || ^14.15.0 || >=16.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    dependencies:
+      '@angular-devkit/core': 13.3.10
+      jsonc-parser: 3.0.0
+      magic-string: 0.25.7
+      ora: 5.4.1
+      rxjs: 6.6.7
     transitivePeerDependencies:
       - chokidar
     dev: true
@@ -707,7 +739,7 @@ packages:
     resolution: {integrity: sha512-ebbEtlI7dxXF5ziNdr05mOY8NnDiPB1XvAlLHctRt/Rc+C3LCOVW5imUVX+mhvUhnNzmPBHewUkOFgGlCxgdAA==}
     dependencies:
       ajv: 8.11.2
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.2
       fast-uri: 2.2.0
     dev: false
 
@@ -1709,6 +1741,17 @@ packages:
       object-hash: 3.0.0
     dev: false
 
+  /@schematics/angular/13.3.10:
+    resolution: {integrity: sha512-sw6K8YihfcqNyfa2/65ACPixZHQJRBw1aNm8w0DRGFyO3aXRe9G5X23MkCMLH+63oK9R1cK63/fZ8zqfdSq7zA==}
+    engines: {node: ^12.20.0 || ^14.15.0 || >=16.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    dependencies:
+      '@angular-devkit/core': 13.3.10
+      '@angular-devkit/schematics': 13.3.10
+      jsonc-parser: 3.0.0
+    transitivePeerDependencies:
+      - chokidar
+    dev: true
+
   /@sinclair/typebox/0.24.51:
     resolution: {integrity: sha512-1P1OROm/rdubP5aFDSZQILU0vrLCJ4fvHt6EoqHEM+2D/G5MK3bIaymUKLit8Js9gbns5UyJnkP/TZROLw4tUA==}
     dev: true
@@ -2352,15 +2395,6 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats/2.1.1:
-    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
-    dependencies:
-      ajv: 8.11.0
-    dev: false
-
   /ajv-formats/2.1.1_ajv@8.11.0:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
     peerDependencies:
@@ -2370,6 +2404,28 @@ packages:
         optional: true
     dependencies:
       ajv: 8.11.0
+    dev: true
+
+  /ajv-formats/2.1.1_ajv@8.11.2:
+    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+    dependencies:
+      ajv: 8.11.2
+    dev: false
+
+  /ajv-formats/2.1.1_ajv@8.9.0:
+    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+    dependencies:
+      ajv: 8.9.0
     dev: true
 
   /ajv-keywords/3.5.2_ajv@6.12.6:
@@ -2396,6 +2452,7 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+    dev: true
 
   /ajv/8.11.2:
     resolution: {integrity: sha512-E4bfmKAhGiSTvMfL1Myyycaub+cUEU2/IvpylXkUu7CHBkBj1f/ikdzbD7YQ6FKUbixDxeYvB/xY4fvyroDlQg==}
@@ -2405,6 +2462,15 @@ packages:
       require-from-string: 2.0.2
       uri-js: 4.4.1
     dev: false
+
+  /ajv/8.9.0:
+    resolution: {integrity: sha512-qOKJyNj/h+OWx7s5DePL6Zu1KeM9jPZhwBqs+7DzP6bGOvqzVCSf0xueYmVuaC/oQ/VtS2zLMLHdQFbkka+XDQ==}
+    dependencies:
+      fast-deep-equal: 3.1.3
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
+      uri-js: 4.4.1
+    dev: true
 
   /ansi-colors/4.1.3:
     resolution: {integrity: sha512-/6w/C21Pm1A7aZitlI5Ni/2J6FFQN8i1Cvz3kHABAAbw93v/NlvKdVOqz7CCWz/3iv/JplRSEEZ83XION15ovw==}
@@ -4099,7 +4165,7 @@ packages:
     dependencies:
       '@fastify/deepmerge': 1.3.0
       ajv: 8.11.2
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1_ajv@8.11.2
       fast-deep-equal: 3.1.3
       fast-uri: 2.2.0
       rfdc: 1.3.0
@@ -5528,6 +5594,10 @@ packages:
       semver: 7.3.8
     dev: true
 
+  /jsonc-parser/3.0.0:
+    resolution: {integrity: sha512-fQzRfAbIBnR0IQvftw9FJveWiHp72Fg20giDrHz6TdfB12UH/uue0D3hm57UB5KgAVuniLMCaS8P1IMj9NR7cA==}
+    dev: true
+
   /jsonc-parser/3.1.0:
     resolution: {integrity: sha512-DRf0QjnNeCUds3xTjKlQQ3DpJD51GvDjJfnxUVWg6PZTo2otSm+slzNAxU/35hF8/oJIKoG9slq30JYOsF2azg==}
     dev: true
@@ -5743,6 +5813,12 @@ packages:
   /macos-release/2.5.0:
     resolution: {integrity: sha512-EIgv+QZ9r+814gjJj0Bt5vSLJLzswGmSUbUpbi9AIr/fsN2IWFBl2NucV9PAiek+U1STK468tEkxmVYUtuAN3g==}
     engines: {node: '>=6'}
+    dev: true
+
+  /magic-string/0.25.7:
+    resolution: {integrity: sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==}
+    dependencies:
+      sourcemap-codec: 1.4.8
     dev: true
 
   /magic-string/0.26.2:
@@ -6044,6 +6120,23 @@ packages:
     dependencies:
       neo4j-driver: 5.3.0
     dev: false
+
+  /nestjs-prisma/0.19.0_chrdn5qd4kbnffoab4k2pkqiay:
+    resolution: {integrity: sha512-pEA6wCINzydhmy6J0vtB2/SSyErdCh1WniJXppRZeEOe/jHatRY8mUGH3dzjeZmBg2UiWc11oGq14K3T4yRztw==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      '@prisma/client': ^2.0.0 || ^3.0.0 || ^4.0.0
+      prisma: ^2.0.0 || ^3.0.0 || ^4.0.0
+    dependencies:
+      '@angular-devkit/core': 13.3.10
+      '@angular-devkit/schematics': 13.3.10
+      '@nestjs/common': 9.2.1_ufuujcqbszwis444rmt5m3dshy
+      '@prisma/client': 4.8.0_prisma@4.8.0
+      '@schematics/angular': 13.3.10
+      prisma: 4.8.0
+    transitivePeerDependencies:
+      - chokidar
+    dev: true
 
   /nestjs-request-context/2.1.0_@nestjs+common@9.2.1:
     resolution: {integrity: sha512-XSZ4CGjgVetyP0q6TSgu+urpUhS8hlY4UxDenPioqEhwpiLCjYFnWrp8NSJctn6NdON5d45LLKz/TN/5ZppL9w==}
@@ -7251,6 +7344,11 @@ packages:
   /source-map/0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
+
+  /source-map/0.7.3:
+    resolution: {integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==}
+    engines: {node: '>= 8'}
+    dev: true
 
   /source-map/0.7.4:
     resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
