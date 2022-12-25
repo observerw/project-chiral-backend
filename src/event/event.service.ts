@@ -3,7 +3,7 @@ import type { UnitIDRange } from '@project-chiral/unit-system'
 import { plainToInstance } from 'class-transformer'
 import { CypherService } from 'src/database/cypher/cypher.service'
 import { PrismaService } from 'src/database/prisma/prisma.service'
-import { getNumberHeader } from 'src/utils/get-header'
+import { getProjectId } from 'src/utils/get-header'
 import type { CreateContentDto } from './dto/content/create-content.dto'
 import type { UpdateContentDto } from './dto/content/update-content.dto'
 import type { CreateEventDto } from './dto/event/create-event.dto'
@@ -81,7 +81,7 @@ export class EventService {
    * 3. 如果有graphId，则将事件添加到指定的graph中
    */
   async createEvent({ graphId, range, ...rest }: CreateEventDto) {
-    const projectId = getNumberHeader('project-id')
+    const projectId = getProjectId()
     const result = await this.prismaService.event.create({
       data: {
         ...rest,

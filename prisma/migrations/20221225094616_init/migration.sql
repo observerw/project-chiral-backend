@@ -91,6 +91,25 @@ CREATE TABLE "Backdrop" (
 );
 
 -- CreateTable
+CREATE TABLE "Workspace" (
+    "id" SERIAL NOT NULL,
+    "origin" TEXT NOT NULL,
+    "layout" JSONB NOT NULL,
+    "projectId" INTEGER NOT NULL,
+
+    CONSTRAINT "Workspace_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Settings" (
+    "id" SERIAL NOT NULL,
+    "darkMode" BOOLEAN NOT NULL DEFAULT false,
+    "projectId" INTEGER NOT NULL,
+
+    CONSTRAINT "Settings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Project" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -98,8 +117,6 @@ CREATE TABLE "Project" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
-    "settings" JSONB,
-    "workspace" JSONB,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
@@ -148,6 +165,12 @@ CREATE UNIQUE INDEX "EventContent_eventId_key" ON "EventContent"("eventId");
 CREATE UNIQUE INDEX "Scence_superId_key" ON "Scence"("superId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Workspace_projectId_key" ON "Workspace"("projectId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Settings_projectId_key" ON "Settings"("projectId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_EventToScence_AB_unique" ON "_EventToScence"("A", "B");
 
 -- CreateIndex
@@ -188,6 +211,12 @@ ALTER TABLE "EventTodo" ADD CONSTRAINT "EventTodo_eventId_fkey" FOREIGN KEY ("ev
 
 -- AddForeignKey
 ALTER TABLE "Scence" ADD CONSTRAINT "Scence_superId_fkey" FOREIGN KEY ("superId") REFERENCES "Scence"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Workspace" ADD CONSTRAINT "Workspace_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Settings" ADD CONSTRAINT "Settings_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

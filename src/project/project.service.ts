@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import { instanceToPlain, plainToInstance } from 'class-transformer'
+import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'src/database/prisma/prisma.service'
-import { getNumberHeader } from 'src/utils/get-header'
+import { getProjectId, getUserId } from 'src/utils/get-header'
 import type { CreateProjectDto } from './dto/create-project.dto'
+import type { CreateSettingsDto } from './dto/create-settings.dto'
+import type { CreateWorkspaceDto } from './dto/create-workspace.dto'
 import type { UpdateProjectDto } from './dto/update-project.dto'
 import type { UpdateSettingsDto } from './dto/update-settings.dto'
 import type { UpdateWorkspaceDto } from './dto/update-workspace.dto'
 import { ProjectEntity } from './entities/project.entity'
-import { SettingsEntity } from './entities/settings.entity'
-import { WorkspaceEntity } from './entities/workspace.entity'
 
 @Injectable()
 export class ProjectService {
@@ -17,92 +17,105 @@ export class ProjectService {
   /* --------------------------------- project -------------------------------- */
 
   async createProject(dto: CreateProjectDto) {
-    const userId = getNumberHeader('user-id')
-    const result = await this.prismaService.project.create({
+    const userId = getUserId()
+    const project = await this.prismaService.project.create({
       data: {
         ...dto,
         userId,
       },
     })
 
-    return plainToInstance(ProjectEntity, result)
+    return plainToInstance(ProjectEntity, project)
   }
 
   async updateProject(data: UpdateProjectDto) {
-    const id = getNumberHeader('project-id')
-    const result = await this.prismaService.project.update({
+    const id = getProjectId()
+    const project = await this.prismaService.project.update({
       where: { id },
       data,
     })
 
-    return plainToInstance(ProjectEntity, result)
+    return plainToInstance(ProjectEntity, project)
   }
 
   async getProject() {
-    const id = getNumberHeader('project-id')
-    const result = await this.prismaService.project.findUniqueOrThrow({
+    const id = getProjectId()
+    const project = await this.prismaService.project.findUniqueOrThrow({
       where: { id },
     })
 
-    return plainToInstance(ProjectEntity, result)
+    return plainToInstance(ProjectEntity, project)
   }
 
   async removeProject() {
-    const id = getNumberHeader('project-id')
-    const result = await this.prismaService.project.delete({
+    const id = getProjectId()
+    const project = await this.prismaService.project.delete({
       where: { id },
     })
 
-    return plainToInstance(ProjectEntity, result)
+    return plainToInstance(ProjectEntity, project)
   }
 
   /* -------------------------------- workspace ------------------------------- */
 
-  async getWorkspace() {
-    const id = getNumberHeader('project-id')
-    const project = await this.prismaService.project.findUnique({
-      where: { id },
-      select: { workspace: true },
-    })
+  async createWorkspace(dto: CreateWorkspaceDto) {
+    const projectId = getProjectId()
 
-    if (!project?.workspace) { return null }
-    return plainToInstance(WorkspaceEntity, project.workspace)
-  }
-
-  async updateWorkspace(dto: UpdateWorkspaceDto) {
-    const id = getNumberHeader('project-id')
-    const { workspace } = await this.prismaService.project.update({
-      where: { id },
+    const workspace = await this.prismaService.workspace.create({
       data: {
-        workspace: instanceToPlain(dto),
+        ...dto,
+        layout: dto.layout as object[],
+        projectId,
       },
     })
 
-    return plainToInstance(WorkspaceEntity, workspace)
+    return plainToInstance(ProjectEntity, workspace)
+  }
+
+  async getWorkspace() {
+    const id = getProjectId()
+
+    const workspace = await this.prismaService.project.findUnique({
+      where: { id },
+    }).workspace()
+
+    return plainToInstance(ProjectEntity, workspace)
+  }
+
+  async updateWorkspace(dto: UpdateWorkspaceDto) {
+    const id = getProjectId()
   }
 
   /* -------------------------------- settings -------------------------------- */
 
-  async getSettings() {
-    const id = getNumberHeader('project-id')
-    const { settings } = await this.prismaService.project.findUniqueOrThrow({
-      where: { id },
-      select: { settings: true },
-    })
+  async createSettings(dto: CreateSettingsDto) {
+    const id = getProjectId()
 
-    if (settings === null) { return null }
-    return plainToInstance(SettingsEntity, settings)
-  }
-
-  async updateSettings(dto: UpdateSettingsDto) {
-    const id = getNumberHeader('project-id')
-    const { settings } = await this.prismaService.project.update({
-      where: { id },
+    const settings = await this.prismaService.settings.create({
       data: {
-        settings: instanceToPlain(dto),
+        ...dto,
+        projectId: id,
       },
     })
 
-    return plainToInstance(SettingsEntity, settings)
+    return plainToInstance(ProjectEntity, settings)
+  }
+
+  async getSettings() {
+    const id = getProjectId()
+    const settings = await this.prismaService.project.findUnique({
+      where: { id },
+    }).settings()
+
+    return plainToInstance(ProjectEntity, settings)
+  }
+
+  async updateSettings(dto: UpdateSettingsDto) {
+    const projectId = getProjectId()
+
+    const result = await this.prismaService.project.findUnique({
+      where: { id: projectId },
+      select: { settings: { select: { id: true } } },
+    })
   }
 }

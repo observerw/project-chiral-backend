@@ -19,9 +19,6 @@ import { CypherService } from './database/cypher/cypher.service'
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // DrivineModule.withOptions({
-    //   connectionProviders: [DatabaseRegistry.buildOrResolveFromEnv('NEO')],
-    // }),
     PrismaModule,
     RequestContextModule,
     EventModule,

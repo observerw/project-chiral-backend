@@ -137,6 +137,25 @@ model Backdrop {
 
 // ----------------------------------- 项目 --------------------------------------
 
+model Workspace {
+  id Int @id @default(autoincrement())
+
+  origin String
+  layout Json
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int     @unique
+}
+
+model Settings {
+  id Int @id @default(autoincrement())
+
+  darkMode Boolean @default(false)
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int     @unique
+}
+
 model Project {
   id Int @id @default(autoincrement())
 
@@ -147,14 +166,13 @@ model Project {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  // 数据库不太关心这些字段的内容，因此简单的使用JSON存储，由前端决定如何解析
-  settings  Json?
-  workspace Json?
-
   events     Event[]
   characters Character[]
   scences    Scence[]
   backdrops  Backdrop[]
+
+  workspace Workspace?
+  settings  Settings?
 
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
