@@ -56,7 +56,6 @@ export class ProjectController {
   @Get('workspace')
   async getWorkspaceInfo() {
     const workspace = await this.projectService.getWorkspace()
-    if (workspace === null) { throw new NotFoundException() }
     return workspace
   }
 

@@ -9,6 +9,8 @@ import type { UpdateProjectDto } from './dto/update-project.dto'
 import type { UpdateSettingsDto } from './dto/update-settings.dto'
 import type { UpdateWorkspaceDto } from './dto/update-workspace.dto'
 import { ProjectEntity } from './entities/project.entity'
+import { SettingsEntity } from './entities/settings.entity'
+import { WorkspaceEntity } from './entities/workspace.entity'
 
 @Injectable()
 export class ProjectService {
@@ -28,11 +30,11 @@ export class ProjectService {
     return plainToInstance(ProjectEntity, project)
   }
 
-  async updateProject(data: UpdateProjectDto) {
+  async updateProject(dto: UpdateProjectDto) {
     const id = getProjectId()
     const project = await this.prismaService.project.update({
       where: { id },
-      data,
+      data: dto,
     })
 
     return plainToInstance(ProjectEntity, project)
@@ -64,58 +66,77 @@ export class ProjectService {
     const workspace = await this.prismaService.workspace.create({
       data: {
         ...dto,
+        // TODO class与prisma JSON Object类型不匹配
         layout: dto.layout as object[],
         projectId,
       },
     })
 
-    return plainToInstance(ProjectEntity, workspace)
+    return plainToInstance(WorkspaceEntity, workspace)
   }
 
   async getWorkspace() {
-    const id = getProjectId()
+    const projectId = getProjectId()
 
-    const workspace = await this.prismaService.project.findUnique({
-      where: { id },
+    const workspace = await this.prismaService.project.findUniqueOrThrow({
+      where: { id: projectId },
     }).workspace()
 
-    return plainToInstance(ProjectEntity, workspace)
+    return plainToInstance(WorkspaceEntity, workspace)
   }
 
   async updateWorkspace(dto: UpdateWorkspaceDto) {
-    const id = getProjectId()
+    const projectId = getProjectId()
+
+    const workspace = await this.prismaService.project.update({
+      where: { id: projectId },
+      data: {
+        workspace: {
+          update: {
+            ...dto,
+            layout: dto.layout as object[],
+          },
+        },
+      },
+      select: { workspace: true },
+    })
+
+    return plainToInstance(WorkspaceEntity, workspace)
   }
 
   /* -------------------------------- settings -------------------------------- */
 
   async createSettings(dto: CreateSettingsDto) {
-    const id = getProjectId()
+    const projectId = getProjectId()
 
     const settings = await this.prismaService.settings.create({
       data: {
         ...dto,
-        projectId: id,
+        projectId,
       },
     })
 
-    return plainToInstance(ProjectEntity, settings)
+    return plainToInstance(SettingsEntity, settings)
   }
 
   async getSettings() {
-    const id = getProjectId()
-    const settings = await this.prismaService.project.findUnique({
-      where: { id },
+    const projectId = getProjectId()
+    const settings = await this.prismaService.project.findUniqueOrThrow({
+      where: { id: projectId },
     }).settings()
 
-    return plainToInstance(ProjectEntity, settings)
+    return plainToInstance(SettingsEntity, settings)
   }
 
   async updateSettings(dto: UpdateSettingsDto) {
     const projectId = getProjectId()
 
-    const result = await this.prismaService.project.findUnique({
+    const settings = await this.prismaService.project.update({
       where: { id: projectId },
-      select: { settings: { select: { id: true } } },
+      data: { settings: { update: dto } },
+      select: { settings: true },
     })
+
+    return plainToInstance(SettingsEntity, settings)
   }
 }
