@@ -1,10 +1,10 @@
-import * as fs from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
+import path from 'path'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import type { NestFastifyApplication } from '@nestjs/platform-fastify'
 import { FastifyAdapter } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { generateApi } from 'swagger-typescript-api'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
@@ -12,10 +12,10 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({
       logger: true,
-      // https: {
-      //   key: fs.readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz.key')),
-      //   cert: fs.readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz_bundle.crt')),
-      // },
+      https: {
+        key: readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz.key')),
+        cert: readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz_bundle.crt')),
+      },
     }),
   )
 
@@ -26,16 +26,7 @@ async function bootstrap() {
     operationIdFactory: (_controllerKey, methodKey) => methodKey,
   })
   SwaggerModule.setup('api', app, document)
-
-  // 将swagger文档转为JSON格式，并根据此为前端生成API client
-  fs.writeFileSync('./swagger.json', JSON.stringify(document))
-  generateApi({
-    name: 'api-base.ts',
-    output: process.env.FRONTEND_API_PATH,
-    input: './swagger.json',
-    unwrapResponseData: true,
-    httpClientType: 'axios',
-  })
+  writeFileSync('./swagger.json', JSON.stringify(document))
 
   // 允许跨域
   app.enableCors()

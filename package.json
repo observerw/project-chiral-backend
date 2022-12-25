@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate": "prisma format && prisma migrate dev"
+    "migrate": "prisma format && prisma migrate dev",
+    "pm2": "nest build && pm2 start process.json"
   },
   "dependencies": {
     "@bitnine-oss/ag-driver": "^0.1.0",

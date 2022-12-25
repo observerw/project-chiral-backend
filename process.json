@@ -1,0 +1,12 @@
+{
+    "$schema": "https://raw.githubusercontent.com/edosssa/pm2-config/master/pm2config.json",
+    "apps": [
+        {
+            "name": "chiral",
+            "script": "dist/src/main.js",
+            "watch": [
+                "dist/src"
+            ]
+        }
+    ]
+}

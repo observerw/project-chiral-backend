@@ -60,13 +60,13 @@ export class ProjectService {
 
   async getWorkspace() {
     const id = getNumberHeader('project-id')
-    const { workspace } = await this.prismaService.project.findUniqueOrThrow({
+    const project = await this.prismaService.project.findUnique({
       where: { id },
       select: { workspace: true },
     })
 
-    if (workspace === null) { return null }
-    return plainToInstance(WorkspaceEntity, workspace)
+    if (!project?.workspace) { return null }
+    return plainToInstance(WorkspaceEntity, project.workspace)
   }
 
   async updateWorkspace(dto: UpdateWorkspaceDto) {
