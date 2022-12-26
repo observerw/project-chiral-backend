@@ -17,8 +17,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            exec bash \-l
+            export PATH="$HOME/n/bin:$PATH"$
+            export PATH="/home/ubuntu/.local/share/pnpm:$PATH"$
             cd ~/workspace/project-chiral-backend
-            ./deploy.sh
-
-
+            pm2 startOrRestart process.json
