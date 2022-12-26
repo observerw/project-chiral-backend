@@ -17,7 +17,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            exec bash
+            source ~/.bashrc
             cd ~/workspace/project-chiral-backend
             git pull
             git status
