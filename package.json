@@ -20,7 +20,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "prisma format && prisma migrate dev",
-    "pm2": "nest build && pm2 startOrRestart process.json"
+    "pm2:start": "nest build && pm2 startOrRestart process.json",
+    "pm2:stop": "pm2 stop process.json",
+    "pm2:delete": "pm2 delete process.json"
   },
   "dependencies": {
     "@bitnine-oss/ag-driver": "^0.1.0",

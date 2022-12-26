@@ -20,4 +20,4 @@ jobs:
             export PATH="$HOME/n/bin:$PATH"$
             export PATH="/home/ubuntu/.local/share/pnpm:$PATH"$
             cd ~/workspace/project-chiral-backend
-            pm2 startOrRestart process.json
+            pnpm pm2:start
