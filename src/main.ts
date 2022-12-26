@@ -27,6 +27,7 @@ async function bootstrap() {
     operationIdFactory: (_controllerKey, methodKey) => methodKey,
   })
   SwaggerModule.setup('api', app, document)
+  // 将Swagger配置写为静态文件，通过/api-docs获取，从而更新前端API
   writeFileSync('./swagger.json', JSON.stringify(document))
 
   // 允许跨域

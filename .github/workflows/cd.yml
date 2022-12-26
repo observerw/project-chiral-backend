@@ -20,4 +20,6 @@ jobs:
             export PATH="$HOME/n/bin:$PATH"$
             export PATH="/home/ubuntu/.local/share/pnpm:$PATH"$
             cd ~/workspace/project-chiral-backend
+            git pull
+            git status
             pnpm pm2:start
