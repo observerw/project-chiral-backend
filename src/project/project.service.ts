@@ -18,12 +18,20 @@ export class ProjectService {
 
   /* --------------------------------- project -------------------------------- */
 
-  async createProject(dto: CreateProjectDto) {
+  async createProject({ workspace, settings, ...rest }: CreateProjectDto) {
     const userId = getUserId()
     const project = await this.prismaService.project.create({
       data: {
-        ...dto,
+        ...rest,
         userId,
+        workspace: {
+          create: {
+            ...workspace,
+            // TODO class与prisma JSON Object类型不匹配
+            layout: workspace.layout as object[],
+          },
+        },
+        settings: { create: settings },
       },
     })
 
@@ -66,7 +74,6 @@ export class ProjectService {
     const workspace = await this.prismaService.workspace.create({
       data: {
         ...dto,
-        // TODO class与prisma JSON Object类型不匹配
         layout: dto.layout as object[],
         projectId,
       },
