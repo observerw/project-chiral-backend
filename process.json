@@ -6,7 +6,10 @@
             "script": "dist/src/main.js",
             "watch": [
                 "dist/src"
-            ]
+            ],
+            "env": {
+                "NODE_ENV": "production"
+            }
         }
     ]
 }

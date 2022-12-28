@@ -9,14 +9,18 @@ import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
+  const ENV = process.env.NODE_ENV
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({
       logger: true,
-      https: {
-        key: readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz.key')),
-        cert: readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz_bundle.crt')),
-      },
+      https: ENV === 'production'
+        ? {
+            key: readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz.key')),
+            cert: readFileSync(path.join(__dirname, '../secrets/api.wozluohd.xyz_bundle.crt')),
+          }
+        : undefined,
     }),
   )
 
@@ -43,6 +47,7 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost)
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
-  await app.listen(4000, '0.0.0.0')
+  const addr = ENV === 'development' ? 'localhost' : '0.0.0.0'
+  await app.listen(4000, addr)
 }
 bootstrap()
