@@ -102,6 +102,7 @@ export class EventService {
         ...range.toJSON(),
         projectId,
         serial,
+        content: { create: {} },
       },
     })
 

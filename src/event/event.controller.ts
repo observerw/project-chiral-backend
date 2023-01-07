@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { CreateContentDto } from './dto/content/create-content.dto'
 import { UpdateContentDto } from './dto/content/update-content.dto'
 import { CreateEventDto } from './dto/event/create-event.dto'
 import { GetEventsQueryDto } from './dto/event/get-events-query.dto'
@@ -66,11 +65,6 @@ export class EventController {
    */
   getContentBrief(@Param('id') id: number) {
     // TODO
-  }
-
-  @Post(':id/content')
-  createContent(@Param('id') id: number, @Body() dto: CreateContentDto) {
-    return this.eventService.createContent(id, dto)
   }
 
   @Put(':id/content')

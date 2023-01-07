@@ -64,7 +64,7 @@ model EventContent {
 
   updatedAt DateTime @updatedAt
 
-  content String
+  content String @default("")
 
   event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId Int   @unique
