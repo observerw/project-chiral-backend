@@ -56,42 +56,56 @@ export class EventService {
   }
 
   async getEventDetail(id: number) {
-    const [event, superEvents, superGraphs, subGraphs] = await Promise.all([
+    const [event, superEventNodes, subEventNodes] = await Promise.all([
       this.getEvent(id),
       this.graphService.getSuperEvents(id),
-      this.graphService.getSubGraphs(id),
-      this.graphService.getSubGraphs(id),
+      this.graphService.getSubEvents(id),
     ])
+
+    const [superEvents, subEvents] = await Promise.all([
+      this.prismaService.event.findMany({
+        where: { id: { in: superEventNodes.map(v => v.properties.id) } },
+      }),
+      this.prismaService.event.findMany({
+        where: { id: { in: subEventNodes.map(v => v.properties.id) } },
+      }),
+    ])
+
+    const { content } = await this.prismaService.event.findUniqueOrThrow({
+      where: { id },
+      select: { content: true },
+    })
+
+    const brief = content?.content.substring(0, 100) ?? undefined
 
     return plainToInstance(EventDetailEntity, {
       ...event,
       superEvents,
-      superGraphs,
-      subGraphs,
+      subEvents,
+      brief,
     })
   }
 
-  /**
-   * 创建事件
-   *
-   * 1. 在postgres中创建相应记录
-   *
-   * 2. 在neo4j中创建相应节点
-   *
-   * 3. 如果有graphId，则将事件添加到指定的graph中
-   */
-  async createEvent({ graphId, range, ...rest }: CreateEventDto) {
+  async createEvent({ range, ...rest }: CreateEventDto) {
     const projectId = getProjectId()
+
+    // 生成事件序号
+    const { serial } = await this.prismaService.project.update({
+      where: { id: projectId },
+      data: { serial: { increment: 1 } },
+      select: { serial: true },
+    })
+
     const result = await this.prismaService.event.create({
       data: {
         ...rest,
         ...range.toJSON(),
         projectId,
+        serial,
       },
     })
 
-    await this.cypherService.createNode(['Event'], { eventId: result.id }).run()
-    if (graphId) { await this.graphService.addToGraph(result.id, graphId) }
+    await this.graphService.createEvent(result.id)
 
     return plainToInstance(EventEntity, result)
   }
@@ -109,9 +123,12 @@ export class EventService {
   }
 
   async removeEvent(id: number) {
-    const result = await this.prismaService.event.delete({
-      where: { id },
-    })
+    const [result] = await Promise.all([
+      this.prismaService.event.delete({
+        where: { id },
+      }),
+      this.graphService.removeEvent(id),
+    ])
 
     return plainToInstance(EventEntity, result)
   }
@@ -120,20 +137,42 @@ export class EventService {
     const result = this.prismaService.eventContent.create({
       data: {
         ...dto,
-        event: { connect: { id: eventId } },
+        eventId,
       },
     })
 
     return plainToInstance(EventContentEntity, result)
   }
 
-  async updateContent(id: number, data: UpdateContentDto) {
-    const result = this.prismaService.eventContent.update({
-      where: { id },
-      data,
+  async getContent(eventId: number) {
+    const { content } = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      select: { content: true },
     })
 
-    return plainToInstance(EventContentEntity, result)
+    // 如果没有内容则在第一次获取时创建
+    if (content === null) {
+      const createdContent = await this.createContent(eventId, { content: '' })
+      return plainToInstance(EventContentEntity, createdContent)
+    }
+
+    return plainToInstance(EventContentEntity, content)
+  }
+
+  async updateContent(eventId: number, dto: UpdateContentDto) {
+    const { content } = this.prismaService.event.update({
+      where: { id: eventId },
+      data: {
+        content: {
+          update: {
+            ...dto,
+          },
+        },
+      },
+      select: { content: true },
+    })
+
+    return plainToInstance(EventContentEntity, content)
   }
 
   async createTodo(eventId: number) {

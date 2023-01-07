@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { UnitID } from '@project-chiral/unit-system'
 import type { CreateProjectDto } from 'src/project/dto/create-project.dto'
 import type { CreateUserDto } from 'src/user/dto/create-user.dto'
 
@@ -24,30 +23,10 @@ const main = async () => {
       name: 'test project',
       description: 'this is a test project',
       userId: 1,
-
-      workspace: {
-        origin: UnitID.fromDayjs(new Date(), 'month').serialize(),
-        layout: [],
-      },
-
-      settings: {
-        darkMode: false,
-      },
     },
   ]
-  await Promise.all(projects.map(({ workspace, settings, ...rest }) => prisma.project.create({
-    data: {
-      ...rest,
-      workspace: {
-        create: {
-          ...workspace,
-          layout: workspace.layout as object[],
-        },
-      },
-      settings: {
-        create: settings,
-      },
-    },
+  await Promise.all(projects.map(data => prisma.project.create({
+    data,
   })))
 }
 

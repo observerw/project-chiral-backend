@@ -57,7 +57,7 @@ export class EventController {
 
   @Get(':id/content')
   getContent(@Param('id') id: number) {
-    // TODO
+    return this.eventService.getContent(id)
   }
 
   /**

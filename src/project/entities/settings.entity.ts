@@ -1,6 +1,7 @@
-import { Type } from 'class-transformer'
+import type { Settings } from '@prisma/client'
 
-export class SettingsEntity {
-  @Type(() => Boolean)
+export class SettingsEntity implements Settings {
+  id: number
+  projectId: number
   darkMode: boolean
 }

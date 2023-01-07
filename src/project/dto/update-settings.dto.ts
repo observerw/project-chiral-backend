@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/swagger'
-import { CreateSettingsDto } from './create-settings.dto'
+import { Type } from 'class-transformer'
+import { IsBoolean, IsOptional } from 'class-validator'
 
-export class UpdateSettingsDto extends PartialType(CreateSettingsDto) {}
+export class UpdateSettingsDto {
+  @Type(() => Boolean)
+  @IsBoolean()
+  @IsOptional()
+  darkMode?: boolean
+}

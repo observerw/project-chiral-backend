@@ -1,10 +1,9 @@
 import { Type } from 'class-transformer'
-import { EventNodeEntity } from 'src/event/entities/event-node.entity'
+import { EventNodeEntity } from './event-node.entity'
 import { EventRelationEntity } from './event-relation.entity'
 
-export class GraphEntity {
-  @Type(() => GraphEntity)
-  graph: GraphEntity
+export class EventGraphEntity {
+  id: number
 
   @Type(() => EventNodeEntity)
   nodes: EventNodeEntity[]

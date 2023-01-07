@@ -15,17 +15,14 @@ export class CreateEventDto {
 
   @IsHexColor()
   @IsOptional()
-  color = '#93c5fd'
+  color?: string = '#93c5fd'
 
   @IsEnum(EventType)
+  @ApiProperty({ enum: EventType })
   type: EventType
 
   @ApiProperty({ type: String })
   @IsNotEmptyObject()
   @TransformUnitIDRange()
   range: UnitIDRange
-
-  @IsString()
-  @IsOptional()
-  graphId?: string
 }

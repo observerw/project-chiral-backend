@@ -3,8 +3,6 @@ import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
 import { getProjectId, getUserId } from 'src/utils/get-header'
 import type { CreateProjectDto } from './dto/create-project.dto'
-import type { CreateSettingsDto } from './dto/create-settings.dto'
-import type { CreateWorkspaceDto } from './dto/create-workspace.dto'
 import type { UpdateProjectDto } from './dto/update-project.dto'
 import type { UpdateSettingsDto } from './dto/update-settings.dto'
 import type { UpdateWorkspaceDto } from './dto/update-workspace.dto'
@@ -14,24 +12,18 @@ import { WorkspaceEntity } from './entities/workspace.entity'
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   /* --------------------------------- project -------------------------------- */
 
-  async createProject({ workspace, settings, ...rest }: CreateProjectDto) {
+  async createProject(dto: CreateProjectDto) {
     const userId = getUserId()
     const project = await this.prismaService.project.create({
       data: {
-        ...rest,
+        ...dto,
         userId,
-        workspace: {
-          create: {
-            ...workspace,
-            // TODO class与prisma JSON Object类型不匹配
-            layout: workspace.layout as object[],
-          },
-        },
-        settings: { create: settings },
+        workspace: { create: {} },
+        settings: { create: {} },
       },
     })
 
@@ -68,20 +60,6 @@ export class ProjectService {
 
   /* -------------------------------- workspace ------------------------------- */
 
-  async createWorkspace(dto: CreateWorkspaceDto) {
-    const projectId = getProjectId()
-
-    const workspace = await this.prismaService.workspace.create({
-      data: {
-        ...dto,
-        layout: dto.layout as object[],
-        projectId,
-      },
-    })
-
-    return plainToInstance(WorkspaceEntity, workspace)
-  }
-
   async getWorkspace() {
     const projectId = getProjectId()
 
@@ -97,14 +75,7 @@ export class ProjectService {
 
     const workspace = await this.prismaService.project.update({
       where: { id: projectId },
-      data: {
-        workspace: {
-          update: {
-            ...dto,
-            layout: dto.layout as object[],
-          },
-        },
-      },
+      data: { workspace: { update: dto } },
       select: { workspace: true },
     })
 
@@ -112,19 +83,6 @@ export class ProjectService {
   }
 
   /* -------------------------------- settings -------------------------------- */
-
-  async createSettings(dto: CreateSettingsDto) {
-    const projectId = getProjectId()
-
-    const settings = await this.prismaService.settings.create({
-      data: {
-        ...dto,
-        projectId,
-      },
-    })
-
-    return plainToInstance(SettingsEntity, settings)
-  }
 
   async getSettings() {
     const projectId = getProjectId()

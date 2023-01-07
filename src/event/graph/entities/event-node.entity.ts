@@ -2,7 +2,7 @@ import { Type } from 'class-transformer'
 import type { Node } from 'cypher-query-builder'
 
 export class EventNodeProperty {
-  eventId: number
+  id: number
 }
 
 export class EventNodeEntity implements Node<EventNodeProperty> {

@@ -16,6 +16,7 @@ export class EventEntity implements Event {
   name: string
   description: string | null
   color: string
+  serial: number
 
   @ApiProperty({ enum: EventType })
   type: EventType

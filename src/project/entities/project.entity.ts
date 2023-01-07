@@ -7,6 +7,6 @@ export class ProjectEntity implements Project {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
-
   userId: number
+  serial: number
 }

@@ -1,20 +1,8 @@
 import type { Workspace } from '@prisma/client'
-import { Type } from 'class-transformer'
 
-class LayoutEntity {
-  id: string
-
-  @Type(() => Number)
-  position: number[]
-}
-
-export class WorkspaceEntity implements Omit<Workspace, 'layout'> {
+export class WorkspaceEntity implements Workspace {
   id: number
-
-  origin: string
-
-  @Type(() => LayoutEntity)
-  layout: LayoutEntity[]
-
+  origin: string | null
+  layout: object[] | null
   projectId: number
 }

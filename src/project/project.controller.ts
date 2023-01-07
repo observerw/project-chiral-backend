@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common'
-import { NotFoundException } from '@nestjs/common/exceptions'
 import { ApiTags } from '@nestjs/swagger'
 import { CreateProjectDto } from './dto/create-project.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
@@ -55,8 +54,7 @@ export class ProjectController {
    */
   @Get('workspace')
   async getWorkspaceInfo() {
-    const workspace = await this.projectService.getWorkspace()
-    return workspace
+    return this.projectService.getWorkspace()
   }
 
   /**
@@ -74,9 +72,7 @@ export class ProjectController {
    */
   @Get('settings')
   async getProjectSettings() {
-    const settings = this.projectService.getSettings()
-    if (settings === null) { throw new NotFoundException() }
-    return settings
+    return this.projectService.getSettings()
   }
 
   /**
