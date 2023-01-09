@@ -5,4 +5,5 @@ export class WorkspaceEntity implements Workspace {
   origin: string | null
   layout: object[] | null
   projectId: number
+  lock: boolean
 }

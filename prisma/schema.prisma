@@ -144,6 +144,7 @@ model Workspace {
 
   origin String?
   layout Json?
+  lock   Boolean @default(false)
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int     @unique
