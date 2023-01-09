@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import type { UnitIDRange } from '@project-chiral/unit-system'
 import { plainToInstance } from 'class-transformer'
 import { CypherService } from 'src/database/cypher/cypher.service'
@@ -22,11 +22,9 @@ export class EventService {
   ) {}
 
   async getEvent(id: number) {
-    const event = await this.prismaService.event.findUnique({
+    const event = await this.prismaService.event.findUniqueOrThrow({
       where: { id },
     })
-
-    if (event === null) { throw new NotFoundException(id) }
 
     return plainToInstance(EventEntity, event)
   }
@@ -45,19 +43,23 @@ export class EventService {
             id: { in: ids },
           },
           {
-            unit: { gt: unit },
-            start: { gte: start, lte: end },
+            unit: { gte: unit },
+            // 事件时间范围与查询时间范围有交集
+            start: { lte: end },
+            end: { gte: start },
           },
         ],
       },
     })
-
     return results.map(v => plainToInstance(EventEntity, v))
   }
 
   async getEventDetail(id: number) {
+    // TODO 这个查询实在是太慢了，需要优化
     const [event, superEventNodes, subEventNodes] = await Promise.all([
-      this.getEvent(id),
+      this.prismaService.event.findUniqueOrThrow({
+        where: { id },
+      }),
       this.graphService.getSuperEvents(id),
       this.graphService.getSubEvents(id),
     ])
@@ -76,7 +78,7 @@ export class EventService {
       select: { content: true },
     })
 
-    const brief = content?.content.substring(0, 100) ?? undefined
+    const brief = content?.content.substring(0, 100) ?? null
 
     return plainToInstance(EventDetailEntity, {
       ...event,
