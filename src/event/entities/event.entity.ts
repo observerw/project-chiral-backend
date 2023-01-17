@@ -1,7 +1,7 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
 import { EventType } from '@prisma/client'
 import type { Event } from '@prisma/client'
-import { Unit, UnitIDRange } from '@project-chiral/unit-system'
+import { Unit, UnitIDRange } from '@project-chiral/unit-id'
 import ExposeShow from 'src/common/decorators/expose-show.decorator'
 
 export class EventEntity implements Event {

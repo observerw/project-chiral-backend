@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import type { UnitIDRange } from '@project-chiral/unit-system'
+import type { UnitIDRange } from '@project-chiral/unit-id'
 import { plainToInstance } from 'class-transformer'
 import { CypherService } from 'src/database/cypher/cypher.service'
 import { PrismaService } from 'nestjs-prisma'
@@ -43,7 +43,7 @@ export class EventService {
             id: { in: ids },
           },
           {
-            unit: { gte: unit },
+            unit,
             // 事件时间范围与查询时间范围有交集
             start: { lte: end },
             end: { gte: start },
@@ -125,15 +125,23 @@ export class EventService {
     return plainToInstance(EventEntity, result)
   }
 
-  async removeEvent(id: number) {
-    const [result] = await Promise.all([
+  async removeEvent(id: number, cascade: boolean) {
+    const [event] = await Promise.all([
       this.prismaService.event.delete({
         where: { id },
       }),
       this.graphService.removeEvent(id),
     ])
 
-    return plainToInstance(EventEntity, result)
+    const events = [plainToInstance(EventEntity, event)]
+
+    if (cascade) {
+      const subIds = (await this.graphService.getSubEvents(id)).map(e => e.properties.id)
+      const subEvents = await Promise.all(subIds.map(id => this.removeEvent(id, true)))
+      events.push(...subEvents.flat())
+    }
+
+    return events
   }
 
   async createContent(eventId: number, dto: CreateContentDto) {

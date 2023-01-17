@@ -48,8 +48,8 @@ export class EventController {
   }
 
   @Delete(':id')
-  removeEvent(@Param('id') id: number) {
-    return this.eventService.removeEvent(id)
+  removeEvent(@Param('id') id: number, @Query('cascade') cascade: boolean) {
+    return this.eventService.removeEvent(id, cascade)
   }
 
   // --------------------------------- content --------------------------------

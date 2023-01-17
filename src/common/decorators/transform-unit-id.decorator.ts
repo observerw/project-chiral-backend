@@ -1,5 +1,5 @@
 import { BadRequestException, applyDecorators } from '@nestjs/common'
-import { UnitIDRange } from '@project-chiral/unit-system'
+import { UnitIDRange } from '@project-chiral/unit-id'
 import { Transform } from 'class-transformer'
 
 // export const TransformUnitID = () => applyDecorators(
