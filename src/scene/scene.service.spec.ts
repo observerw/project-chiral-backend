@@ -1,16 +1,16 @@
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
-import { BackdropService } from './backdrop.service'
+import { SceneService } from './scene.service'
 
-describe('BackdropService', () => {
-  let service: BackdropService
+describe('SceneService', () => {
+  let service: SceneService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BackdropService],
+      providers: [SceneService],
     }).compile()
 
-    service = module.get<BackdropService>(BackdropService)
+    service = module.get<SceneService>(SceneService)
   })
 
   it('should be defined', () => {

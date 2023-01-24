@@ -7,6 +7,7 @@ export class UserEntity implements User {
   username: string
   phone: string | null
   email: string | null
+  avatar: string | null
 
   @Exclude()
   @ApiHideProperty()

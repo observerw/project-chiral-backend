@@ -4,6 +4,8 @@ import { UpdateContentDto } from './dto/content/update-content.dto'
 import { CreateEventDto } from './dto/event/create-event.dto'
 import { GetEventsQueryDto } from './dto/event/get-events-query.dto'
 import { UpdateEventDto } from './dto/event/update-event.dto'
+import { CreateTodoDto } from './dto/todo/create-todo.dto'
+import { UpdateTodoDto } from './dto/todo/update-todo.dto'
 import { EventService } from './event.service'
 
 @ApiTags('event')
@@ -35,6 +37,16 @@ export class EventController {
   @Get()
   getEvents(@Query() { range, ids }: GetEventsQueryDto) {
     return this.eventService.getEvents(range, ids)
+  }
+
+  @Get('search/name')
+  searchEventName(@Query('text') text: string) {
+    return this.eventService.searchEventName(text)
+  }
+
+  @Get('serial')
+  getEventBySerial(@Param('serial') serial: number) {
+    return this.getEventBySerial(serial)
   }
 
   @Post()
@@ -72,6 +84,11 @@ export class EventController {
     return this.eventService.updateContent(id, dto)
   }
 
+  @Get('search/content')
+  searchContent(@Query('text') text: string) {
+    return this.eventService.searchContent(text)
+  }
+
   // ---------------------------------- todo ----------------------------------
 
   /**
@@ -80,7 +97,7 @@ export class EventController {
    */
   @Get(':id/todo')
   getTodos(@Param('id') id: number) {
-    // TODO
+    return this.eventService.getTodos(id)
   }
 
   /**
@@ -89,16 +106,16 @@ export class EventController {
    */
   @Get('todo/:id')
   getTodo(@Param('id') id: number) {
-    // TODO
+    return this.eventService.getTodo(id)
   }
 
   @Post(':id/todo')
-  createTodo(@Param('id') id: number) {
-    // TODO
+  createTodo(@Param('id') id: number, @Body() dto: CreateTodoDto) {
+    return this.eventService.createTodo(id, dto)
   }
 
   @Put(':id/todo')
-  updateTodo(@Param('id') id: number) {
+  updateTodo(@Param('id') id: number, @Body() dto: UpdateTodoDto) {
     // TODO
   }
 

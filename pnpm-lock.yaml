@@ -16,7 +16,7 @@ specifiers:
   '@nestjs/schematics': ^9.0.0
   '@nestjs/swagger': ^6.1.3
   '@nestjs/testing': ^9.0.0
-  '@prisma/client': ^4.5.0
+  '@prisma/client': ^4.9.0
   '@project-chiral/unit-id': ^0.1.1
   '@types/jest': 28.1.8
   '@types/lodash': ^4.14.191
@@ -41,7 +41,7 @@ specifiers:
   passport: ^0.6.0
   passport-jwt: ^4.0.0
   passport-local: ^1.0.0
-  prisma: ^4.8.1
+  prisma: ^4.9.0
   prisma-merge: ^0.2.0
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
@@ -89,7 +89,7 @@ devDependencies:
   '@nestjs/cli': 9.1.5
   '@nestjs/schematics': 9.0.3_typescript@4.9.4
   '@nestjs/testing': 9.2.1_7t26jhkazt7ec4mhnb6gaaz5ia
-  '@prisma/client': 4.8.0_prisma@4.8.1
+  '@prisma/client': 4.9.0_prisma@4.9.0
   '@types/jest': 28.1.8
   '@types/lodash': 4.14.191
   '@types/node': 16.18.10
@@ -102,8 +102,8 @@ devDependencies:
   eslint: 8.30.0
   eslint-plugin-unused-imports: 2.0.0_juver2u3xbiwnjfu6d55vmnoem
   jest: 28.1.3_b6etc7xurivcjmbbbvo5ydauxy
-  nestjs-prisma: 0.19.0_2rozxvgr2lio5oql3t67zf5dly
-  prisma: 4.8.1
+  nestjs-prisma: 0.19.0_lifzdbff3zz6b2azghthgzskyq
+  prisma: 4.9.0
   prisma-merge: 0.2.0
   source-map-support: 0.5.21
   supertest: 6.3.3
@@ -1573,8 +1573,8 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/client/4.8.0_prisma@4.8.1:
-    resolution: {integrity: sha512-Y1riB0p2W52kh3zgssP/YAhln3RjBFcJy3uwEiyjmU+TQYh6QTZDRFBo3JtBWuq2FyMOl1Rye8jxzUP+n0l5Cg==}
+  /@prisma/client/4.9.0_prisma@4.9.0:
+    resolution: {integrity: sha512-bz6QARw54sWcbyR1lLnF2QHvRW5R/Jxnbbmwh3u+969vUKXtBkXgSgjDA85nji31ZBlf7+FrHDy5x+5ydGyQDg==}
     engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
@@ -1583,8 +1583,8 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe
-      prisma: 4.8.1
+      '@prisma/engines-version': 4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
+      prisma: 4.9.0
     dev: true
 
   /@prisma/debug/3.14.0:
@@ -1624,8 +1624,8 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/engines-version/4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe:
-    resolution: {integrity: sha512-MHSOSexomRMom8QN4t7bu87wPPD+pa+hW9+71JnVcF3DqyyO/ycCLhRL1we3EojRpZxKvuyGho2REQsMCvxcJw==}
+  /@prisma/engines-version/4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5:
+    resolution: {integrity: sha512-M16aibbxi/FhW7z1sJCX8u+0DriyQYY5AyeTH7plQm9MLnURoiyn3CZBqAyIoQ+Z1pS77usCIibYJWSgleBMBA==}
     dev: true
 
   /@prisma/engines/3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
@@ -1633,8 +1633,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /@prisma/engines/4.8.1:
-    resolution: {integrity: sha512-93tctjNXcIS+i/e552IO6tqw17sX8liivv8WX9lDMCpEEe3ci+nT9F+1oHtAafqruXLepKF80i/D20Mm+ESlOw==}
+  /@prisma/engines/4.9.0:
+    resolution: {integrity: sha512-t1pt0Gsp+HcgPJrHFc+d/ZSAaKKWar2G/iakrE07yeKPNavDP3iVKPpfXP22OTCHZUWf7OelwKJxQgKAm5hkgw==}
     requiresBuild: true
     dev: true
 
@@ -2359,6 +2359,14 @@ packages:
       acorn: 8.8.1
     dev: true
 
+  /acorn-import-assertions/1.8.0_acorn@8.8.2:
+    resolution: {integrity: sha512-m7VZ3jwz4eK6A4Vtt8Ew1/mNbP24u0FhdyfA7fSvnJR6LMdfOYnmuIrrJAgrYfYJ10F/otaHTtrtrtmHdMNzEw==}
+    peerDependencies:
+      acorn: ^8
+    dependencies:
+      acorn: 8.8.2
+    dev: true
+
   /acorn-jsx/5.3.2_acorn@8.8.1:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -2374,6 +2382,12 @@ packages:
 
   /acorn/8.8.1:
     resolution: {integrity: sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+    dev: true
+
+  /acorn/8.8.2:
+    resolution: {integrity: sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
@@ -6121,7 +6135,7 @@ packages:
       neo4j-driver: 5.3.0
     dev: false
 
-  /nestjs-prisma/0.19.0_2rozxvgr2lio5oql3t67zf5dly:
+  /nestjs-prisma/0.19.0_lifzdbff3zz6b2azghthgzskyq:
     resolution: {integrity: sha512-pEA6wCINzydhmy6J0vtB2/SSyErdCh1WniJXppRZeEOe/jHatRY8mUGH3dzjeZmBg2UiWc11oGq14K3T4yRztw==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
@@ -6131,9 +6145,9 @@ packages:
       '@angular-devkit/core': 13.3.10
       '@angular-devkit/schematics': 13.3.10
       '@nestjs/common': 9.2.1_ufuujcqbszwis444rmt5m3dshy
-      '@prisma/client': 4.8.0_prisma@4.8.1
+      '@prisma/client': 4.9.0_prisma@4.9.0
       '@schematics/angular': 13.3.10
-      prisma: 4.8.1
+      prisma: 4.9.0
     transitivePeerDependencies:
       - chokidar
     dev: true
@@ -6766,13 +6780,13 @@ packages:
       - supports-color
     dev: true
 
-  /prisma/4.8.1:
-    resolution: {integrity: sha512-ZMLnSjwulIeYfaU1O6/LF6PEJzxN5par5weykxMykS9Z6ara/j76JH3Yo2AH3bgJbPN4Z6NeCK9s5fDkzf33cg==}
+  /prisma/4.9.0:
+    resolution: {integrity: sha512-bS96oZ5oDFXYgoF2l7PJ3Mp1wWWfLOo8B/jAfbA2Pn0Wm5Z/owBHzaMQKS3i1CzVBDWWPVnOohmbJmjvkcHS5w==}
     engines: {node: '>=14.17'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 4.8.1
+      '@prisma/engines': 4.9.0
     dev: true
 
   /process-nextick-args/2.0.1:
@@ -8283,8 +8297,8 @@ packages:
       '@webassemblyjs/ast': 1.11.1
       '@webassemblyjs/wasm-edit': 1.11.1
       '@webassemblyjs/wasm-parser': 1.11.1
-      acorn: 8.8.1
-      acorn-import-assertions: 1.8.0_acorn@8.8.1
+      acorn: 8.8.2
+      acorn-import-assertions: 1.8.0_acorn@8.8.2
       browserslist: 4.21.4
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.12.0

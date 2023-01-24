@@ -1,4 +1,4 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { EventType } from '@prisma/client'
 import type { Event } from '@prisma/client'
 import { Unit, UnitIDRange } from '@project-chiral/unit-id'
@@ -16,17 +16,12 @@ export class EventEntity implements Event {
 
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date | null
 
-  @ApiHideProperty()
+  deleted: Date | null
+
   unit: number
-
-  @ApiHideProperty()
   start: Date
-
-  @ApiHideProperty()
   end: Date
-
   @ExposeShow({ type: String })
   range() {
     return UnitIDRange.fromDayjs(this.start, this.end, Unit.fromOrder(this.unit)).serialize()

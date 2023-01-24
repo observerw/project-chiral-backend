@@ -14,8 +14,7 @@ export class CreateEventDto {
   description: string | null
 
   @IsHexColor()
-  @IsOptional()
-  color?: string = '#93c5fd'
+  color: string
 
   @IsEnum(EventType)
   @ApiProperty({ enum: EventType })

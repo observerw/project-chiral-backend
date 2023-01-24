@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import type { UnitIDRange } from '@project-chiral/unit-id'
 import { plainToInstance } from 'class-transformer'
-import { CypherService } from 'src/database/cypher/cypher.service'
 import { PrismaService } from 'nestjs-prisma'
 import { getProjectId } from 'src/utils/get-header'
-import type { CreateContentDto } from './dto/content/create-content.dto'
 import type { UpdateContentDto } from './dto/content/update-content.dto'
 import type { CreateEventDto } from './dto/event/create-event.dto'
 import type { UpdateEventDto } from './dto/event/update-event.dto'
@@ -12,14 +10,18 @@ import { EventContentEntity } from './entities/event-content.entity'
 import { EventDetailEntity } from './entities/event-detail.entity'
 import { EventEntity } from './entities/event.entity'
 import { GraphService } from './graph/graph.service'
+import { EventTodoEntity } from './entities/event-todo.entity'
+import type { CreateTodoDto } from './dto/todo/create-todo.dto'
+import type { UpdateTodoDto } from './dto/todo/update-todo.dto'
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly cypherService: CypherService,
     private readonly graphService: GraphService,
   ) {}
+
+  // ---------------------------------- event ---------------------------------
 
   async getEvent(id: number) {
     const event = await this.prismaService.event.findUniqueOrThrow({
@@ -52,6 +54,33 @@ export class EventService {
       },
     })
     return results.map(v => plainToInstance(EventEntity, v))
+  }
+
+  async getEventBySerial(serial: number) {
+    const projectId = getProjectId()
+    const event = await this.prismaService.event.findFirstOrThrow({
+      where: {
+        serial,
+        projectId,
+      },
+    })
+
+    return plainToInstance(EventEntity, event)
+  }
+
+  async searchEventName(text: string) {
+    if (text === '') { return [] }
+    const serial = parseInt(text)
+    const events = await this.prismaService.event.findMany({
+      where: {
+        OR: [
+          { serial: isNaN(serial) ? -1 : serial },
+          { name: { contains: text } },
+        ],
+      },
+    })
+
+    return events.map(v => plainToInstance(EventEntity, v))
   }
 
   async getEventDetail(id: number) {
@@ -126,6 +155,7 @@ export class EventService {
   }
 
   async removeEvent(id: number, cascade: boolean) {
+    // TODO 软删除
     const [event] = await Promise.all([
       this.prismaService.event.delete({
         where: { id },
@@ -144,16 +174,7 @@ export class EventService {
     return events
   }
 
-  async createContent(eventId: number, dto: CreateContentDto) {
-    const result = this.prismaService.eventContent.create({
-      data: {
-        ...dto,
-        eventId,
-      },
-    })
-
-    return plainToInstance(EventContentEntity, result)
-  }
+  // ---------------------------------- content ---------------------------------
 
   async getContent(eventId: number) {
     const { content } = await this.prismaService.event.findUniqueOrThrow({
@@ -161,23 +182,15 @@ export class EventService {
       select: { content: true },
     })
 
-    // 如果没有内容则在第一次获取时创建
-    if (content === null) {
-      const createdContent = await this.createContent(eventId, { content: '' })
-      return plainToInstance(EventContentEntity, createdContent)
-    }
-
     return plainToInstance(EventContentEntity, content)
   }
 
   async updateContent(eventId: number, dto: UpdateContentDto) {
-    const { content } = this.prismaService.event.update({
+    const { content } = await this.prismaService.event.update({
       where: { id: eventId },
       data: {
         content: {
-          update: {
-            ...dto,
-          },
+          update: dto,
         },
       },
       select: { content: true },
@@ -186,7 +199,66 @@ export class EventService {
     return plainToInstance(EventContentEntity, content)
   }
 
-  async createTodo(eventId: number) {
-    // TODO
+  async searchContent(text: string) {
+    if (text === '') { return [] }
+    // TODO 全文搜索按词索引，但有可能需要按片段索引
+    const events = await this.prismaService.event.findMany({
+      where: {
+        content: {
+          content: {
+            contains: text.replace(/\s+/, ' & '),
+          },
+        },
+      },
+    })
+
+    return events.map(v => plainToInstance(EventEntity, v))
+  }
+
+  // ---------------------------------- todo ---------------------------------
+
+  async getTodos(eventId: number) {
+    const { todos } = await this.prismaService.event.findUniqueOrThrow({
+      where: { id: eventId },
+      include: { todos: true },
+    })
+
+    return todos.map(v => plainToInstance(EventTodoEntity, v))
+  }
+
+  async getTodo(id: number) {
+    const todo = await this.prismaService.eventTodo.findUniqueOrThrow({
+      where: { id },
+    })
+
+    return plainToInstance(EventTodoEntity, todo)
+  }
+
+  async createTodo(eventId: number, dto: CreateTodoDto) {
+    const todo = await this.prismaService.eventTodo.create({
+      data: {
+        ...dto,
+        eventId,
+      },
+    })
+
+    return plainToInstance(EventTodoEntity, todo)
+  }
+
+  async updateTodo(id: number, dto: UpdateTodoDto) {
+    const todo = await this.prismaService.eventTodo.update({
+      where: { id },
+      data: dto,
+    })
+
+    return plainToInstance(EventTodoEntity, todo)
+  }
+
+  async removeTodo(id: number) {
+    const todo = await this.prismaService.eventTodo.delete({
+      where: { id },
+    })
+
+    return plainToInstance(EventTodoEntity, todo)
   }
 }

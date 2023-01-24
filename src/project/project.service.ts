@@ -21,7 +21,7 @@ export class ProjectService {
     const project = await this.prismaService.project.create({
       data: {
         ...dto,
-        userId,
+        user: { connect: { id: userId } },
         workspace: { create: {} },
         settings: { create: {} },
       },

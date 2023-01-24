@@ -9,10 +9,10 @@ import { AuthModule } from './auth/auth.module'
 import { ProjectModule } from './project/project.module'
 import { UserModule } from './user/user.module'
 import { CharacterModule } from './character/character.module'
-import { ScenceModule } from './scence/scence.module'
-import { BackdropModule } from './backdrop/backdrop.module'
 import { EventModule } from './event/event.module'
 import { CypherService } from './database/cypher/cypher.service'
+import { SceneModule } from './scene/scene.module'
+import { WorldviewModule } from './worldview/worldview.module'
 
 @Module({
   imports: [
@@ -21,6 +21,9 @@ import { CypherService } from './database/cypher/cypher.service'
     }),
     PrismaModule.forRoot({
       isGlobal: true,
+      prismaServiceOptions: {
+        middlewares: [],
+      },
     }),
     RequestContextModule,
     EventModule,
@@ -28,8 +31,8 @@ import { CypherService } from './database/cypher/cypher.service'
     AuthModule,
     ProjectModule,
     CharacterModule,
-    ScenceModule,
-    BackdropModule,
+    SceneModule,
+    WorldviewModule,
   ],
   controllers: [AppController],
   providers: [
@@ -45,11 +48,6 @@ import { CypherService } from './database/cypher/cypher.service'
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
-    // prisma的异常转换
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: PrismaClientExceptionFilter,
-    // },
   ],
 })
 export class AppModule { }
