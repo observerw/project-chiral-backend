@@ -10,7 +10,7 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getUser(id: number) {
-    const result = await this.prismaService.user.findUnique({
+    const result = await this.prismaService.user.findUniqueOrThrow({
       where: { id },
     })
 
@@ -18,7 +18,7 @@ export class UserService {
   }
 
   async getUserByUsername(username: string) {
-    const result = await this.prismaService.user.findUnique({
+    const result = await this.prismaService.user.findUniqueOrThrow({
       where: { username },
     })
 

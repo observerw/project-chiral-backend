@@ -1,6 +1,5 @@
-import { Body, ConflictException, Controller, Delete, Get, Post, Request, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { Prisma } from '@prisma/client'
 import { plainToInstance } from 'class-transformer'
 import { AuthService } from 'src/auth/auth.service'
 import { Public } from 'src/auth/decorators/public.decorator'
@@ -39,17 +38,7 @@ export class UserController {
   @Public()
   @Post('register')
   async register(@Body() dto: CreateUserDto) {
-    try {
-      return this.userService.createUser(dto)
-    }
-    catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2002') {
-          throw new ConflictException('用户已存在')
-        }
-        throw e
-      }
-    }
+    return this.userService.createUser(dto)
   }
 
   // TODO 增加手机登录功能

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import type { UnitIDRange } from '@project-chiral/unit-id'
+import type { UnitID, UnitIDRange } from '@project-chiral/unit-id'
 import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
 import { getProjectId } from 'src/utils/get-header'
@@ -66,6 +66,14 @@ export class EventService {
     })
 
     return plainToInstance(EventEntity, event)
+  }
+
+  async getPrevEvent(start: UnitID) {
+    // TODO
+  }
+
+  async getNextEvent(start: UnitID) {
+    // TODO
   }
 
   async searchEventName(text: string) {

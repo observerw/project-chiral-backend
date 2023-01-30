@@ -6,15 +6,16 @@ export class CharacterEntity implements Character {
   id: number
   name: string
   alias: string[]
-  description: string
+  description: string | null
 
   deleted: Date | null
 
-  unit: number
-  start: Date
-  end: Date
-  @ExposeShow({ type: String })
+  unit: number | null
+  start: Date | null
+  end: Date | null
+  @ExposeShow({ type: String, required: false })
   range() {
+    if (this.unit === null || this.start === null || this.end === null) { return null }
     return UnitIDRange.fromDayjs(this.start, this.end, Unit.fromOrder(this.unit)).serialize()
   }
 }

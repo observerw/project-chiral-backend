@@ -116,11 +116,11 @@ export class EventController {
 
   @Put(':id/todo')
   updateTodo(@Param('id') id: number, @Body() dto: UpdateTodoDto) {
-    // TODO
+    return this.eventService.updateTodo(id, dto)
   }
 
   @Delete('todo/:id')
   removeTodo(@Param('id') id: number) {
-    // TODO
+    return this.eventService.removeTodo(id)
   }
 }

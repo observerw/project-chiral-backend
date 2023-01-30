@@ -1,6 +1,6 @@
 import * as crypto from 'crypto'
 
-export const generateSalt = () => crypto.randomUUID()
+export const generateSalt = crypto.randomUUID
 
 export const encryptPassword = (password: string, salt: string): string => {
   if (!password || !salt) { return '' }
