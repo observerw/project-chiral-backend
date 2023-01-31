@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CharacterService } from './character.service'
 import { CreateCharacterDto } from './dto/create-character.dto'
-import { UpdateCharacterDto } from './dto/update-character.dto'
 
 @Controller('character')
 export class CharacterController {
@@ -9,26 +8,21 @@ export class CharacterController {
 
   @Post()
   create(@Body() createCharacterDto: CreateCharacterDto) {
-    return this.characterService.create(createCharacterDto)
-  }
-
-  @Get()
-  findAll() {
-    return this.characterService.findAll()
+    return this.characterService.createCharacter(createCharacterDto)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.characterService.findOne(+id)
+  getCharacter(@Param('id') id: number) {
+    return this.characterService.getCharacter(id)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCharacterDto: UpdateCharacterDto) {
-    return this.characterService.update(+id, updateCharacterDto)
+  @Put(':id')
+  updateCharacter(@Param('id') id: number, @Body() updateCharacterDto: CreateCharacterDto) {
+    return this.characterService.updateCharacter(id, updateCharacterDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.characterService.remove(+id)
+  removeCharacter(@Param('id') id: number) {
+    return this.characterService.removeCharacter(id)
   }
 }
