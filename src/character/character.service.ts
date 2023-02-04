@@ -11,8 +11,8 @@ export class CharacterService {
     private prismaService: PrismaService,
   ) {}
 
-  createCharacter({ range, ...rest }: CreateCharacterDto) {
-    const chara = this.prismaService.character.create({
+  async createCharacter({ range, ...rest }: CreateCharacterDto) {
+    const chara = await this.prismaService.character.create({
       data: {
         ...rest,
         ...range.toJSON(),
@@ -22,16 +22,16 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  getCharacter(id: number) {
-    const chara = this.prismaService.character.findFirstOrThrow({
+  async getCharacter(id: number) {
+    const chara = await this.prismaService.character.findFirstOrThrow({
       where: { id },
     })
 
     return plainToInstance(CharacterEntity, chara)
   }
 
-  updateCharacter(id: number, { range, ...rest }: UpdateCharacterDto) {
-    const chara = this.prismaService.character.update({
+  async updateCharacter(id: number, { range, ...rest }: UpdateCharacterDto) {
+    const chara = await this.prismaService.character.update({
       where: { id },
       data: {
         ...rest,
@@ -42,11 +42,19 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  removeCharacter(id: number) {
-    const chara = this.prismaService.character.delete({
+  async removeCharacter(id: number) {
+    const chara = await this.prismaService.character.delete({
       where: { id },
     })
 
     return plainToInstance(CharacterEntity, chara)
+  }
+
+  async searchCharacterByName(text: string) {
+    const charas = await this.prismaService.character.findMany({
+      where: { name: { contains: text } },
+    })
+
+    return charas.map(chara => plainToInstance(CharacterEntity, chara))
   }
 }

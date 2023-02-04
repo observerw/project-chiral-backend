@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { SceneService } from './scene.service'
 import { CreateSceneDto } from './dto/create-scene.dto'
 import { UpdateSceneDto } from './dto/update-scene.dto'
@@ -8,27 +8,27 @@ export class SceneController {
   constructor(private readonly sceneService: SceneService) {}
 
   @Post()
-  create(@Body() createSceneDto: CreateSceneDto) {
-    return this.sceneService.create(createSceneDto)
-  }
-
-  @Get()
-  findAll() {
-    return this.sceneService.findAll()
+  createScene(@Body() createSceneDto: CreateSceneDto) {
+    return this.sceneService.createScene(createSceneDto)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sceneService.findOne(+id)
+  getScene(@Param('id') id: number) {
+    return this.sceneService.getScene(id)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSceneDto: UpdateSceneDto) {
-    return this.sceneService.update(+id, updateSceneDto)
+  @Put(':id')
+  updateScene(@Param('id') id: number, @Body() updateSceneDto: UpdateSceneDto) {
+    return this.sceneService.updateScene(id, updateSceneDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sceneService.remove(+id)
+  removeScene(@Param('id') id: number) {
+    return this.sceneService.removeScene(id)
+  }
+
+  @Get('search/name')
+  searchSceneByName(@Query('text') text: string) {
+    return this.sceneService.searchSceneByName(text)
   }
 }

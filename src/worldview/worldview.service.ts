@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common'
+import { plainToInstance } from 'class-transformer'
+import { PrismaService } from 'nestjs-prisma'
 import type { CreateWorldviewDto } from './dto/create-worldview.dto'
 import type { UpdateWorldviewDto } from './dto/update-worldview.dto'
+import { WorldviewEntity } from './entities/worldview.entity'
 
 @Injectable()
 export class WorldviewService {
-  create(createWorldviewDto: CreateWorldviewDto) {
-    return 'This action adds a new worldview'
+  constructor(
+    private prismaService: PrismaService,
+  ) {}
+
+  async createWorldview(dto: CreateWorldviewDto) {
+    const worldview = await this.prismaService.worldview.create({
+      data: dto,
+    })
+
+    return plainToInstance(WorldviewEntity, worldview)
   }
 
-  findAll() {
-    return `This action returns all worldview`
+  async updateWorldview(id: number, dto: UpdateWorldviewDto) {
+    const worldview = await this.prismaService.worldview.update({
+      where: { id },
+      data: dto,
+    })
+
+    return plainToInstance(WorldviewEntity, worldview)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} worldview`
+  async getWorldview(id: number) {
+    const worldview = await this.prismaService.worldview.findUniqueOrThrow({
+      where: { id },
+    })
+
+    return plainToInstance(WorldviewEntity, worldview)
   }
 
-  update(id: number, updateWorldviewDto: UpdateWorldviewDto) {
-    return `This action updates a #${id} worldview`
-  }
+  async removeWorldview(id: number) {
+    const worldview = await this.prismaService.worldview.delete({
+      where: { id },
+    })
 
-  remove(id: number) {
-    return `This action removes a #${id} worldview`
+    return plainToInstance(WorldviewEntity, worldview)
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { CharacterService } from './character.service'
 import { CreateCharacterDto } from './dto/create-character.dto'
 
@@ -7,7 +7,7 @@ export class CharacterController {
   constructor(private readonly characterService: CharacterService) {}
 
   @Post()
-  create(@Body() createCharacterDto: CreateCharacterDto) {
+  createCharacter(@Body() createCharacterDto: CreateCharacterDto) {
     return this.characterService.createCharacter(createCharacterDto)
   }
 
@@ -24,5 +24,10 @@ export class CharacterController {
   @Delete(':id')
   removeCharacter(@Param('id') id: number) {
     return this.characterService.removeCharacter(id)
+  }
+
+  @Get('search/name')
+  searchCharacterByName(@Query('text') text: string) {
+    return this.characterService.searchCharacterByName(text)
   }
 }

@@ -1,26 +1,58 @@
 import { Injectable } from '@nestjs/common'
+import { plainToInstance } from 'class-transformer'
+import { PrismaService } from 'nestjs-prisma'
 import type { CreateSceneDto } from './dto/create-scene.dto'
 import type { UpdateSceneDto } from './dto/update-scene.dto'
+import { SceneEntity } from './entities/scene.entity'
 
 @Injectable()
 export class SceneService {
-  create(createSceneDto: CreateSceneDto) {
-    return 'This action adds a new scene'
+  constructor(
+    private prismaService: PrismaService,
+  ) {}
+
+  async createScene(createSceneDto: CreateSceneDto) {
+    const scene = await this.prismaService.scene.create({
+      data: createSceneDto,
+    })
+
+    return plainToInstance(SceneEntity, scene)
   }
 
-  findAll() {
-    return `This action returns all scene`
+  async getScene(id: number) {
+    const scene = await this.prismaService.scene.findUnique({
+      where: { id },
+    })
+
+    return plainToInstance(SceneEntity, scene)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} scene`
+  async updateScene(id: number, { subSceneIds, superSceneId, ...rest }: UpdateSceneDto) {
+    const scene = await this.prismaService.scene.update({
+      where: { id },
+      data: {
+        ...rest,
+        subs: { connect: subSceneIds?.map(id => ({ id })) ?? [] },
+        super: { connect: { id: superSceneId } },
+      },
+    })
+
+    return plainToInstance(SceneEntity, scene)
   }
 
-  update(id: number, updateSceneDto: UpdateSceneDto) {
-    return `This action updates a #${id} scene`
+  async removeScene(id: number) {
+    const scene = await this.prismaService.scene.delete({
+      where: { id },
+    })
+
+    return plainToInstance(SceneEntity, scene)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} scene`
+  async searchSceneByName(text: string) {
+    const scenes = await this.prismaService.scene.findMany({
+      where: { name: { contains: text } },
+    })
+
+    return scenes.map(scene => plainToInstance(SceneEntity, scene))
   }
 }
