@@ -90,6 +90,7 @@ model Character {
   name        String
   alias       String[]
   description String?
+  avatar      String?
 
   deleted DateTime?
 

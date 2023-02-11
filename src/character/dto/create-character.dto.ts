@@ -14,7 +14,11 @@ export class CreateCharacterDto {
 
   @IsString()
   @IsOptional()
-  description: string | null
+  description?: string
+
+  @IsString()
+  @IsOptional()
+  avatar?: string
 
   @ApiPropertyOptional({ type: String })
   @TransformUnitIDRange()

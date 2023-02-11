@@ -16,6 +16,11 @@ export class CharacterController {
     return this.characterService.getCharacter(id)
   }
 
+  @Get()
+  getAllCharacters() {
+    return this.characterService.getAllCharacters()
+  }
+
   @Put(':id')
   updateCharacter(@Param('id') id: number, @Body() updateCharacterDto: CreateCharacterDto) {
     return this.characterService.updateCharacter(id, updateCharacterDto)

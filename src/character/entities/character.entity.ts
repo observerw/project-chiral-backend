@@ -7,6 +7,7 @@ export class CharacterEntity implements Character {
   name: string
   alias: string[]
   description: string | null
+  avatar: string | null
 
   deleted: Date | null
 
