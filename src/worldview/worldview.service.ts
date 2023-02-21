@@ -19,7 +19,15 @@ export class WorldviewService {
     return plainToInstance(WorldviewEntity, worldview)
   }
 
-  async updateWorldview(id: number, dto: UpdateWorldviewDto) {
+  async get(id: number) {
+    const worldview = await this.prismaService.worldview.findUniqueOrThrow({
+      where: { id },
+    })
+
+    return plainToInstance(WorldviewEntity, worldview)
+  }
+
+  async update(id: number, dto: UpdateWorldviewDto) {
     const worldview = await this.prismaService.worldview.update({
       where: { id },
       data: dto,
@@ -28,15 +36,7 @@ export class WorldviewService {
     return plainToInstance(WorldviewEntity, worldview)
   }
 
-  async getWorldview(id: number) {
-    const worldview = await this.prismaService.worldview.findUniqueOrThrow({
-      where: { id },
-    })
-
-    return plainToInstance(WorldviewEntity, worldview)
-  }
-
-  async removeWorldview(id: number) {
+  async remove(id: number) {
     const worldview = await this.prismaService.worldview.delete({
       where: { id },
     })

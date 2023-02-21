@@ -9,7 +9,7 @@ import { UserEntity } from './entities/user.entity'
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getUser(id: number) {
+  async get(id: number) {
     const result = await this.prismaService.user.findUniqueOrThrow({
       where: { id },
     })
@@ -17,7 +17,7 @@ export class UserService {
     return plainToInstance(UserEntity, result)
   }
 
-  async getUserByUsername(username: string) {
+  async getByUsername(username: string) {
     const result = await this.prismaService.user.findUniqueOrThrow({
       where: { username },
     })
@@ -25,7 +25,7 @@ export class UserService {
     return plainToInstance(UserEntity, result)
   }
 
-  async deleteUser(id: number) {
+  async remove(id: number) {
     const result = await this.prismaService.user.delete({
       where: { id },
     })
@@ -33,12 +33,12 @@ export class UserService {
     return plainToInstance(UserEntity, result)
   }
 
-  async getAllUsers() {
+  async getAll() {
     const users = await this.prismaService.user.findMany()
     return users.map(user => plainToInstance(UserEntity, user))
   }
 
-  async createUser(dto: CreateUserDto) {
+  async create(dto: CreateUserDto) {
     const salt = generateSalt()
     const password = encryptPassword(dto.password, salt)
 

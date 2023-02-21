@@ -11,7 +11,7 @@ export class SceneService {
     private prismaService: PrismaService,
   ) {}
 
-  async createScene(createSceneDto: CreateSceneDto) {
+  async create(createSceneDto: CreateSceneDto) {
     const scene = await this.prismaService.scene.create({
       data: createSceneDto,
     })
@@ -19,7 +19,7 @@ export class SceneService {
     return plainToInstance(SceneEntity, scene)
   }
 
-  async getScene(id: number) {
+  async get(id: number) {
     const scene = await this.prismaService.scene.findUnique({
       where: { id },
     })
@@ -27,7 +27,7 @@ export class SceneService {
     return plainToInstance(SceneEntity, scene)
   }
 
-  async updateScene(id: number, { subSceneIds, superSceneId, ...rest }: UpdateSceneDto) {
+  async update(id: number, { subSceneIds, superSceneId, ...rest }: UpdateSceneDto) {
     const scene = await this.prismaService.scene.update({
       where: { id },
       data: {
@@ -48,7 +48,7 @@ export class SceneService {
     return plainToInstance(SceneEntity, scene)
   }
 
-  async searchSceneByName(text: string) {
+  async searchByName(text: string) {
     const scenes = await this.prismaService.scene.findMany({
       where: { name: { contains: text } },
     })

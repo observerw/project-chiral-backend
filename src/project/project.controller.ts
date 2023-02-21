@@ -19,32 +19,32 @@ export class ProjectController {
    * 创建新项目
    */
   @Post()
-  async createProject(@Body() dto: CreateProjectDto) {
-    return this.projectService.createProject(dto)
+  async create(@Body() dto: CreateProjectDto) {
+    return this.projectService.create(dto)
   }
 
   /**
    * 获取项目信息
    */
   @Get()
-  async getProject() {
-    return this.projectService.getProject()
+  async get() {
+    return this.projectService.get()
   }
 
   /**
    * 更新项目信息
    */
   @Put()
-  async updateProject(@Body() dto: UpdateProjectDto) {
-    return this.projectService.updateProject(dto)
+  async update(@Body() dto: UpdateProjectDto) {
+    return this.projectService.update(dto)
   }
 
   /**
    * 删除项目
    */
   @Delete()
-  async removeProject() {
-    return this.projectService.removeProject()
+  async remove() {
+    return this.projectService.remove()
   }
 
   // -------------------------------- workspace -------------------------------
@@ -53,7 +53,7 @@ export class ProjectController {
    * 获取工作区信息
    */
   @Get('workspace')
-  async getWorkspaceInfo() {
+  async getWorkspace() {
     return this.projectService.getWorkspace()
   }
 
@@ -61,7 +61,7 @@ export class ProjectController {
    * 更新工作区信息
    */
   @Put('workspace')
-  async updateWorkspaceInfo(@Body() dto: UpdateWorkspaceDto) {
+  async updateWorkspace(@Body() dto: UpdateWorkspaceDto) {
     return this.projectService.updateWorkspace(dto)
   }
 
@@ -71,7 +71,7 @@ export class ProjectController {
    * 获取项目设置
    */
   @Get('settings')
-  async getProjectSettings() {
+  async getSettings() {
     return this.projectService.getSettings()
   }
 
@@ -79,7 +79,7 @@ export class ProjectController {
    * 更新项目设置
    */
   @Put('settings')
-  async updateProjectSettings(@Body() dto: UpdateSettingsDto) {
+  async updateSettings(@Body() dto: UpdateSettingsDto) {
     return this.projectService.updateSettings(dto)
   }
 }

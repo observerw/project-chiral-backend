@@ -8,22 +8,22 @@ export class WorldviewController {
   constructor(private readonly worldviewService: WorldviewService) {}
 
   @Post()
-  createWorldview(@Body() dto: CreateWorldviewDto) {
+  create(@Body() dto: CreateWorldviewDto) {
     return this.worldviewService.createWorldview(dto)
   }
 
   @Get(':id')
-  getWorldview(@Param('id') id: number) {
-    return this.worldviewService.getWorldview(+id)
+  get(@Param('id') id: number) {
+    return this.worldviewService.get(+id)
   }
 
   @Post(':id')
-  updateWorldview(@Param('id') id: number, @Body() dto: UpdateWorldviewDto) {
-    return this.worldviewService.updateWorldview(id, dto)
+  update(@Param('id') id: number, @Body() dto: UpdateWorldviewDto) {
+    return this.worldviewService.update(id, dto)
   }
 
   @Delete(':id')
-  removeWorldview(@Param('id') id: number) {
-    return this.worldviewService.removeWorldview(id)
+  remove(@Param('id') id: number) {
+    return this.worldviewService.remove(id)
   }
 }

@@ -16,8 +16,8 @@ export class EventController {
   // ---------------------------------- event ---------------------------------
 
   @Get(':id')
-  async getEvent(@Param('id') id: number) {
-    return this.eventService.getEvent(id)
+  async get(@Param('id') id: number) {
+    return this.eventService.get(id)
   }
 
   /**
@@ -25,8 +25,8 @@ export class EventController {
    * @param id 事件id
    */
   @Get(':id/detail')
-  async getEventDetail(@Param('id') id: number) {
-    return this.eventService.getEventDetail(id)
+  async getDetail(@Param('id') id: number) {
+    return this.eventService.getDetail(id)
   }
 
   /**
@@ -35,33 +35,33 @@ export class EventController {
    * @param ids 事件id列表
    */
   @Get('range')
-  getEventsByRange(@Query() { range }: GetEventsQueryDto) {
-    return this.eventService.getEventsByRange(range)
+  getByRange(@Query() { range }: GetEventsQueryDto) {
+    return this.eventService.getByRange(range)
   }
 
   @Get('serial')
-  getEventBySerial(@Param('serial') serial: number) {
-    return this.getEventBySerial(serial)
+  getBySerial(@Param('serial') serial: number) {
+    return this.getBySerial(serial)
   }
 
   @Get('search/name')
-  searchEventName(@Query('text') text: string) {
-    return this.eventService.searchEventName(text)
+  searchByName(@Query('text') text: string) {
+    return this.eventService.searchByName(text)
   }
 
   @Post()
-  createEvent(@Body() dto: CreateEventDto) {
-    return this.eventService.createEvent(dto)
+  create(@Body() dto: CreateEventDto) {
+    return this.eventService.create(dto)
   }
 
   @Put(':id')
-  updateEvent(@Param('id') id: number, @Body() dto: UpdateEventDto) {
-    return this.eventService.updateEvent(id, dto)
+  update(@Param('id') id: number, @Body() dto: UpdateEventDto) {
+    return this.eventService.update(id, dto)
   }
 
   @Delete(':id')
-  removeEvent(@Param('id') id: number, @Query('cascade') cascade: boolean) {
-    return this.eventService.removeEvent(id, cascade)
+  remove(@Param('id') id: number, @Query('cascade') cascade: boolean) {
+    return this.eventService.remove(id, cascade)
   }
 
   // --------------------------------- content --------------------------------

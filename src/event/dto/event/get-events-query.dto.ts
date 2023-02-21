@@ -1,12 +1,11 @@
-import { ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { UnitIDRange } from '@project-chiral/unit-id'
-import { IsNotEmptyObject, IsOptional } from 'class-validator'
+import { IsNotEmptyObject } from 'class-validator'
 import { TransformUnitIDRange } from 'src/common/decorators/transform-unit-id.decorator'
 
 export class GetEventsQueryDto {
-  @ApiPropertyOptional({ type: String })
-  @IsOptional()
+  @ApiProperty({ type: String })
   @IsNotEmptyObject()
   @TransformUnitIDRange()
-  range?: UnitIDRange
+  range: UnitIDRange
 }

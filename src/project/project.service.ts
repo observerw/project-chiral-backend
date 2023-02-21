@@ -16,7 +16,7 @@ export class ProjectService {
 
   /* --------------------------------- project -------------------------------- */
 
-  async createProject(dto: CreateProjectDto) {
+  async create(dto: CreateProjectDto) {
     const userId = getUserId()
     const project = await this.prismaService.project.create({
       data: {
@@ -30,7 +30,7 @@ export class ProjectService {
     return plainToInstance(ProjectEntity, project)
   }
 
-  async updateProject(dto: UpdateProjectDto) {
+  async update(dto: UpdateProjectDto) {
     const id = getProjectId()
     const project = await this.prismaService.project.update({
       where: { id },
@@ -40,7 +40,7 @@ export class ProjectService {
     return plainToInstance(ProjectEntity, project)
   }
 
-  async getProject() {
+  async get() {
     const id = getProjectId()
     const project = await this.prismaService.project.findUniqueOrThrow({
       where: { id },
@@ -49,7 +49,7 @@ export class ProjectService {
     return plainToInstance(ProjectEntity, project)
   }
 
-  async removeProject() {
+  async remove() {
     const id = getProjectId()
     const project = await this.prismaService.project.delete({
       where: { id },

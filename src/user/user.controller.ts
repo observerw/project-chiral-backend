@@ -18,13 +18,13 @@ export class UserController {
   ) {}
 
   @Get()
-  async getUser(@Request() { user }: { user: UserEntity }) {
+  async get(@Request() { user }: { user: UserEntity }) {
     return user
   }
 
   @Delete()
-  deleteUser(@Request() { user: { id } }: { user: UserEntity }) {
-    return this.userService.deleteUser(id)
+  delete(@Request() { user: { id } }: { user: UserEntity }) {
+    return this.userService.remove(id)
   }
 
   @Public()
@@ -38,7 +38,7 @@ export class UserController {
   @Public()
   @Post('register')
   async register(@Body() dto: CreateUserDto) {
-    return this.userService.createUser(dto)
+    return this.userService.create(dto)
   }
 
   // TODO 增加手机登录功能

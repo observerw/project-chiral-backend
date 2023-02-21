@@ -23,7 +23,7 @@ export class EventService {
 
   // ---------------------------------- event ---------------------------------
 
-  async getEvent(id: number) {
+  async get(id: number) {
     const event = await this.prismaService.event.findUniqueOrThrow({
       where: { id },
     })
@@ -36,8 +36,8 @@ export class EventService {
    * @param range 事件发生的时间范围
    * @param ids 事件的id列表
    */
-  async getEventsByRange(range?: UnitIDRange) {
-    const { unit, start, end } = range?.toJSON() ?? {}
+  async getByRange(range: UnitIDRange) {
+    const { unit, start, end } = range.toJSON()
     const results = await this.prismaService.event.findMany({
       where: {
         unit,
@@ -49,7 +49,7 @@ export class EventService {
     return results.map(v => plainToInstance(EventEntity, v))
   }
 
-  async getEventBySerial(serial: number) {
+  async getBySerial(serial: number) {
     const projectId = getProjectId()
     const event = await this.prismaService.event.findFirstOrThrow({
       where: {
@@ -61,15 +61,15 @@ export class EventService {
     return plainToInstance(EventEntity, event)
   }
 
-  async getPrevEvent(start: UnitID) {
+  async getPrev(start: UnitID) {
     // TODO
   }
 
-  async getNextEvent(start: UnitID) {
+  async getNext(start: UnitID) {
     // TODO
   }
 
-  async searchEventName(text: string) {
+  async searchByName(text: string) {
     if (text === '') { return [] }
     const serial = parseInt(text)
     const events = await this.prismaService.event.findMany({
@@ -84,7 +84,7 @@ export class EventService {
     return events.map(v => plainToInstance(EventEntity, v))
   }
 
-  async getEventDetail(id: number) {
+  async getDetail(id: number) {
     // TODO 这个查询实在是太慢了，需要优化
     const [event, superEventNodes, subEventNodes] = await Promise.all([
       this.prismaService.event.findUniqueOrThrow({
@@ -118,7 +118,7 @@ export class EventService {
     })
   }
 
-  async createEvent({ range, ...rest }: CreateEventDto) {
+  async create({ range, ...rest }: CreateEventDto) {
     const projectId = getProjectId()
 
     // 生成事件序号
@@ -143,7 +143,7 @@ export class EventService {
     return plainToInstance(EventEntity, result)
   }
 
-  async updateEvent(id: number, { range, ...rest }: UpdateEventDto) {
+  async update(id: number, { range, ...rest }: UpdateEventDto) {
     const result = await this.prismaService.event.update({
       where: { id },
       data: {
@@ -155,7 +155,7 @@ export class EventService {
     return plainToInstance(EventEntity, result)
   }
 
-  async removeEvent(id: number, cascade: boolean) {
+  async remove(id: number, cascade: boolean) {
     // TODO 软删除
     const [event] = await Promise.all([
       this.prismaService.event.delete({
@@ -168,7 +168,7 @@ export class EventService {
 
     if (cascade) {
       const subIds = (await this.graphService.getSubEvents(id)).map(e => e.properties.id)
-      const subEvents = await Promise.all(subIds.map(id => this.removeEvent(id, true)))
+      const subEvents = await Promise.all(subIds.map(id => this.remove(id, true)))
       events.push(...subEvents.flat())
     }
 

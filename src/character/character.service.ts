@@ -16,7 +16,7 @@ export class CharacterService {
     @InjectRedis() private redis: Redis,
   ) {}
 
-  async createCharacter({ range, ...rest }: CreateCharacterDto) {
+  async create({ range, ...rest }: CreateCharacterDto) {
     const chara = await this.prismaService.character.create({
       data: {
         ...rest,
@@ -29,7 +29,7 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  async getCharacter(id: number) {
+  async get(id: number) {
     const chara = await this.prismaService.character.findFirstOrThrow({
       where: { id },
     })
@@ -37,7 +37,7 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  async getAllCharacters() {
+  async getAll() {
     const projectId = getProjectId()
     const charas = await this.prismaService.character.findMany({
       where: {
@@ -50,7 +50,7 @@ export class CharacterService {
     return charas.map(chara => plainToInstance(CharacterEntity, chara))
   }
 
-  async updateCharacter(id: number, { range, ...rest }: UpdateCharacterDto) {
+  async update(id: number, { range, ...rest }: UpdateCharacterDto) {
     // TODO 两次查询，没有必要
     const oldChara = await this.prismaService.character.findUniqueOrThrow({
       where: { id },
@@ -72,7 +72,7 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  async removeCharacter(id: number) {
+  async remove(id: number) {
     const chara = await this.prismaService.character.delete({
       where: { id },
     })
@@ -82,7 +82,7 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  async searchCharacterByName(text: string) {
+  async searchByName(text: string) {
     const charas = await this.prismaService.character.findMany({
       where: { name: { contains: text } },
     })

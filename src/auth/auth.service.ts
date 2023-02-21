@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async validate(username: string, password: string) {
-    const user = await this.userService.getUserByUsername(username)
+    const user = await this.userService.getByUsername(username)
     if (!user) { return null }
     const { password: realPassword, salt, ...rest } = user
     const hashPassword = encryptPassword(password, salt)

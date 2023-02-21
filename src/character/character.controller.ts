@@ -7,32 +7,32 @@ export class CharacterController {
   constructor(private readonly characterService: CharacterService) {}
 
   @Post()
-  createCharacter(@Body() createCharacterDto: CreateCharacterDto) {
-    return this.characterService.createCharacter(createCharacterDto)
+  create(@Body() createCharacterDto: CreateCharacterDto) {
+    return this.characterService.create(createCharacterDto)
   }
 
   @Get(':id')
-  getCharacter(@Param('id') id: number) {
-    return this.characterService.getCharacter(id)
+  get(@Param('id') id: number) {
+    return this.characterService.get(id)
   }
 
   @Get()
-  getAllCharacters() {
-    return this.characterService.getAllCharacters()
+  getAll() {
+    return this.characterService.getAll()
   }
 
   @Put(':id')
-  updateCharacter(@Param('id') id: number, @Body() updateCharacterDto: CreateCharacterDto) {
-    return this.characterService.updateCharacter(id, updateCharacterDto)
+  update(@Param('id') id: number, @Body() updateCharacterDto: CreateCharacterDto) {
+    return this.characterService.update(id, updateCharacterDto)
   }
 
   @Delete(':id')
-  removeCharacter(@Param('id') id: number) {
-    return this.characterService.removeCharacter(id)
+  remove(@Param('id') id: number) {
+    return this.characterService.remove(id)
   }
 
   @Get('search/name')
-  searchCharacterByName(@Query('text') text: string) {
-    return this.characterService.searchCharacterByName(text)
+  searchByName(@Query('text') text: string) {
+    return this.characterService.searchByName(text)
   }
 }

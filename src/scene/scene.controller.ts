@@ -8,27 +8,27 @@ export class SceneController {
   constructor(private readonly sceneService: SceneService) {}
 
   @Post()
-  createScene(@Body() createSceneDto: CreateSceneDto) {
-    return this.sceneService.createScene(createSceneDto)
+  create(@Body() createSceneDto: CreateSceneDto) {
+    return this.sceneService.create(createSceneDto)
   }
 
   @Get(':id')
-  getScene(@Param('id') id: number) {
-    return this.sceneService.getScene(id)
+  get(@Param('id') id: number) {
+    return this.sceneService.get(id)
   }
 
   @Put(':id')
-  updateScene(@Param('id') id: number, @Body() updateSceneDto: UpdateSceneDto) {
-    return this.sceneService.updateScene(id, updateSceneDto)
+  update(@Param('id') id: number, @Body() updateSceneDto: UpdateSceneDto) {
+    return this.sceneService.update(id, updateSceneDto)
   }
 
   @Delete(':id')
-  removeScene(@Param('id') id: number) {
+  remove(@Param('id') id: number) {
     return this.sceneService.removeScene(id)
   }
 
   @Get('search/name')
-  searchSceneByName(@Query('text') text: string) {
-    return this.sceneService.searchSceneByName(text)
+  searchByName(@Query('text') text: string) {
+    return this.sceneService.searchByName(text)
   }
 }
