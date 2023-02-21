@@ -36,21 +36,14 @@ export class EventService {
    * @param range 事件发生的时间范围
    * @param ids 事件的id列表
    */
-  async getEvents(range?: UnitIDRange, ids?: number[]) {
+  async getEventsByRange(range?: UnitIDRange) {
     const { unit, start, end } = range?.toJSON() ?? {}
     const results = await this.prismaService.event.findMany({
       where: {
-        OR: [
-          {
-            id: { in: ids },
-          },
-          {
-            unit,
-            // 事件时间范围与查询时间范围有交集
-            start: { lte: end },
-            end: { gte: start },
-          },
-        ],
+        unit,
+        // 事件时间范围与查询时间范围有交集
+        start: { lte: end },
+        end: { gte: start },
       },
     })
     return results.map(v => plainToInstance(EventEntity, v))

@@ -34,19 +34,19 @@ export class EventController {
    * @param range 时间范围
    * @param ids 事件id列表
    */
-  @Get()
-  getEvents(@Query() { range, ids }: GetEventsQueryDto) {
-    return this.eventService.getEvents(range, ids)
-  }
-
-  @Get('search/name')
-  searchEventName(@Query('text') text: string) {
-    return this.eventService.searchEventName(text)
+  @Get('range')
+  getEventsByRange(@Query() { range }: GetEventsQueryDto) {
+    return this.eventService.getEventsByRange(range)
   }
 
   @Get('serial')
   getEventBySerial(@Param('serial') serial: number) {
     return this.getEventBySerial(serial)
+  }
+
+  @Get('search/name')
+  searchEventName(@Query('text') text: string) {
+    return this.eventService.searchEventName(text)
   }
 
   @Post()
