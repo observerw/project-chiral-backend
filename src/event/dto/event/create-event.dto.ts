@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { EventType } from '@prisma/client'
-import { UnitIDRange } from '@project-chiral/unit-id'
-import { IsEnum, IsHexColor, IsNotEmpty, IsOptional, IsString } from 'class-validator'
-import { TransformUnitIDRange } from 'src/common/decorators/transform-unit-id.decorator'
+import { Type } from 'class-transformer'
+import { IsDate, IsEnum, IsHexColor, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator'
 
 export class CreateEventDto {
   @IsString()
@@ -20,7 +19,17 @@ export class CreateEventDto {
   @ApiProperty({ enum: EventType })
   type: EventType
 
-  @ApiProperty({ type: String })
-  @TransformUnitIDRange()
-  range: UnitIDRange
+  @IsInt()
+  @Min(0)
+  @Max(8)
+  @Type(() => Number)
+  unit: number
+
+  @IsDate()
+  @Type(() => Date)
+  start: Date
+
+  @IsDate()
+  @Type(() => Date)
+  end: Date
 }

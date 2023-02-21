@@ -1,8 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger'
-import { UnitIDRange } from '@project-chiral/unit-id'
 import { Type } from 'class-transformer'
-import { IsOptional, IsString } from 'class-validator'
-import { TransformUnitIDRange } from 'src/common/decorators/transform-unit-id.decorator'
+import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator'
 
 export class CreateCharacterDto {
   @IsString()
@@ -10,7 +7,8 @@ export class CreateCharacterDto {
 
   @IsString({ each: true })
   @Type(() => String)
-  alias: string[]
+  @IsOptional()
+  alias?: string[]
 
   @IsString()
   @IsOptional()
@@ -20,8 +18,20 @@ export class CreateCharacterDto {
   @IsOptional()
   avatar?: string
 
-  @ApiPropertyOptional({ type: String })
-  @TransformUnitIDRange()
+  @IsInt()
+  @Min(0)
+  @Max(8)
   @IsOptional()
-  range: UnitIDRange
+  @Type(() => Number)
+  unit?: number
+
+  @IsDate()
+  @IsOptional()
+  @Type(() => Date)
+  start?: Date
+
+  @IsDate()
+  @IsOptional()
+  @Type(() => Date)
+  end?: Date
 }

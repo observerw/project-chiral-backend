@@ -16,12 +16,9 @@ export class CharacterService {
     @InjectRedis() private redis: Redis,
   ) {}
 
-  async create({ range, ...rest }: CreateCharacterDto) {
+  async create(dto: CreateCharacterDto) {
     const chara = await this.prismaService.character.create({
-      data: {
-        ...rest,
-        ...range.toJSON(),
-      },
+      data: dto,
     })
 
     await this.updateCharaMap(chara.id, [], [chara.name, ...chara.alias])
@@ -50,17 +47,13 @@ export class CharacterService {
     return charas.map(chara => plainToInstance(CharacterEntity, chara))
   }
 
-  async update(id: number, { range, ...rest }: UpdateCharacterDto) {
-    // TODO 两次查询，没有必要
+  async update(id: number, dto: UpdateCharacterDto) {
     const oldChara = await this.prismaService.character.findUniqueOrThrow({
       where: { id },
     })
     const chara = await this.prismaService.character.update({
       where: { id },
-      data: {
-        ...rest,
-        ...range?.toJSON() ?? {},
-      },
+      data: dto,
     })
 
     await this.updateCharaMap(
@@ -68,6 +61,32 @@ export class CharacterService {
       [oldChara.name, ...oldChara.alias],
       [chara.name, ...chara.alias],
     )
+
+    return plainToInstance(CharacterEntity, chara)
+  }
+
+  async addAlias(id: number, alias: string) {
+    const chara = await this.prismaService.character.update({
+      where: { id },
+      data: { alias: { push: alias } },
+    })
+
+    await this.updateCharaMap(chara.id, [], [alias])
+
+    return plainToInstance(CharacterEntity, chara)
+  }
+
+  async removeAlias(id: number, alias: string) {
+    const { alias: oldAlias } = await this.prismaService.character.findUniqueOrThrow({
+      where: { id },
+      select: { alias: true },
+    })
+    const chara = await this.prismaService.character.update({
+      where: { id },
+      data: { alias: oldAlias.filter(a => a !== alias) },
+    })
+
+    await this.updateCharaMap(chara.id, [alias], [])
 
     return plainToInstance(CharacterEntity, chara)
   }
@@ -90,7 +109,7 @@ export class CharacterService {
     return charas.map(chara => plainToInstance(CharacterEntity, chara))
   }
 
-  // redis
+  // ---------------------------------- redis ---------------------------------
 
   async updateCharaMap(id: number, oldNames: string[], newNames: string[]) {
     const projectId = getProjectId()

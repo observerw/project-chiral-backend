@@ -1,6 +1,4 @@
 import type { Character } from '@prisma/client'
-import { UnitIDRange } from '@project-chiral/unit-id'
-import ExposeShow from 'src/common/decorators/expose-show.decorator'
 
 export class CharacterEntity implements Character {
   id: number
@@ -14,9 +12,4 @@ export class CharacterEntity implements Character {
   unit: number | null
   start: Date | null
   end: Date | null
-  @ExposeShow({ type: String, required: false })
-  range() {
-    if (this.unit === null || this.start === null || this.end === null) { return null }
-    return UnitIDRange.fromDayjs(this.unit, this.start, this.end).serialize()
-  }
 }

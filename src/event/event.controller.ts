@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { ApiTags } from '@nestjs/swagger'
 import { UpdateContentDto } from './dto/content/update-content.dto'
 import { CreateEventDto } from './dto/event/create-event.dto'
-import { GetEventsQueryDto } from './dto/event/get-events-query.dto'
+import { GetEventsByRangeQueryDto } from './dto/event/get-events-by-range-query.dto'
 import { UpdateEventDto } from './dto/event/update-event.dto'
 import { CreateTodoDto } from './dto/todo/create-todo.dto'
 import { UpdateTodoDto } from './dto/todo/update-todo.dto'
@@ -20,23 +20,14 @@ export class EventController {
     return this.eventService.get(id)
   }
 
-  /**
-   * 获取事件的详细信息
-   * @param id 事件id
-   */
   @Get(':id/detail')
   async getDetail(@Param('id') id: number) {
     return this.eventService.getDetail(id)
   }
 
-  /**
-   * 根据时间范围或给定id列表获取事件，将二者的并集返回
-   * @param range 时间范围
-   * @param ids 事件id列表
-   */
   @Get('range')
-  getByRange(@Query() { range }: GetEventsQueryDto) {
-    return this.eventService.getByRange(range)
+  getByRange(@Query() { unit, start, end }: GetEventsByRangeQueryDto) {
+    return this.eventService.getByRange(unit, start, end)
   }
 
   @Get('serial')

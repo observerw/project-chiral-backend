@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common'
-import type { UnitID, UnitIDRange } from '@project-chiral/unit-id'
 import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
 import { getProjectId } from 'src/utils/get-header'
@@ -36,8 +35,7 @@ export class EventService {
    * @param range 事件发生的时间范围
    * @param ids 事件的id列表
    */
-  async getByRange(range: UnitIDRange) {
-    const { unit, start, end } = range.toJSON()
+  async getByRange(unit: number, start: Date, end: Date) {
     const results = await this.prismaService.event.findMany({
       where: {
         unit,
@@ -59,14 +57,6 @@ export class EventService {
     })
 
     return plainToInstance(EventEntity, event)
-  }
-
-  async getPrev(start: UnitID) {
-    // TODO
-  }
-
-  async getNext(start: UnitID) {
-    // TODO
   }
 
   async searchByName(text: string) {
@@ -118,7 +108,7 @@ export class EventService {
     })
   }
 
-  async create({ range, ...rest }: CreateEventDto) {
+  async create(dto: CreateEventDto) {
     const projectId = getProjectId()
 
     // 生成事件序号
@@ -130,8 +120,7 @@ export class EventService {
 
     const result = await this.prismaService.event.create({
       data: {
-        ...rest,
-        ...range.toJSON(),
+        ...dto,
         projectId,
         serial,
         content: { create: {} },
@@ -143,13 +132,10 @@ export class EventService {
     return plainToInstance(EventEntity, result)
   }
 
-  async update(id: number, { range, ...rest }: UpdateEventDto) {
+  async update(id: number, dto: UpdateEventDto) {
     const result = await this.prismaService.event.update({
       where: { id },
-      data: {
-        ...rest,
-        ...range?.toJSON(),
-      },
+      data: dto,
     })
 
     return plainToInstance(EventEntity, result)

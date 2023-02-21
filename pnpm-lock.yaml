@@ -17,7 +17,6 @@ specifiers:
   '@nestjs/swagger': ^6.1.4
   '@nestjs/testing': ^9.2.1
   '@prisma/client': ^4.8.1
-  '@project-chiral/unit-id': ^0.3.1
   '@types/jest': 28.1.8
   '@types/lodash': ^4.14.191
   '@types/node': ^16.18.10
@@ -69,7 +68,6 @@ dependencies:
   '@nestjs/passport': 9.0.0_6o47igfla2pj7yzh7agpvpttka
   '@nestjs/platform-fastify': 9.2.1_ikxpgcebo3djgwayhrp6upsvza
   '@nestjs/swagger': 6.1.4_3ad6e4keca24au37uk3aw7bkcy
-  '@project-chiral/unit-id': 0.3.1
   class-transformer: 0.5.1
   class-validator: 0.13.2
   cypher-query-builder: 6.0.4
@@ -1702,13 +1700,6 @@ packages:
       - supports-color
     dev: true
 
-  /@project-chiral/unit-id/0.3.1:
-    resolution: {integrity: sha512-uNu4YUZODi60KWqdd2cLNciZ3rAGed0iIyVBj3glp0Mq+HqJ4HbT9DcGlwLdKpL49RLQ11TG+I0ecbt7Tl4wlA==}
-    dependencies:
-      dayjs: 1.11.7
-      object-hash: 3.0.0
-    dev: false
-
   /@schematics/angular/13.3.10:
     resolution: {integrity: sha512-sw6K8YihfcqNyfa2/65ACPixZHQJRBw1aNm8w0DRGFyO3aXRe9G5X23MkCMLH+63oK9R1cK63/fZ8zqfdSq7zA==}
     engines: {node: ^12.20.0 || ^14.15.0 || >=16.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
@@ -3202,10 +3193,6 @@ packages:
     resolution: {integrity: sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==}
     engines: {node: '>= 12'}
     dev: true
-
-  /dayjs/1.11.7:
-    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
-    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
