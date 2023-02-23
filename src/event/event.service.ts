@@ -12,6 +12,7 @@ import { GraphService } from './graph/graph.service'
 import { EventTodoEntity } from './entities/event-todo.entity'
 import type { CreateTodoDto } from './dto/todo/create-todo.dto'
 import type { UpdateTodoDto } from './dto/todo/update-todo.dto'
+import type { GetAllEventQueryDto } from './dto/event/get-all-event-query-dto'
 
 @Injectable()
 export class EventService {
@@ -30,18 +31,31 @@ export class EventService {
     return plainToInstance(EventEntity, event)
   }
 
+  async getAll({ size, page = 0 }: GetAllEventQueryDto) {
+    const projectId = getProjectId()
+    const results = await this.prismaService.event.findMany({
+      where: { projectId },
+      skip: (size ?? 0) * page,
+      take: size,
+    })
+
+    return results.map(v => plainToInstance(EventEntity, v))
+  }
+
   /**
    * 根据时间范围或给定id列表获取事件，将二者的并集返回
    * @param range 事件发生的时间范围
    * @param ids 事件的id列表
    */
   async getByRange(unit: number, start: Date, end: Date) {
+    const projectId = getProjectId()
     const results = await this.prismaService.event.findMany({
       where: {
         unit,
         // 事件时间范围与查询时间范围有交集
         start: { lte: end },
         end: { gte: start },
+        projectId,
       },
     })
     return results.map(v => plainToInstance(EventEntity, v))

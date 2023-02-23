@@ -6,5 +6,5 @@ export class CreateTodoDto {
 
   @IsHexColor()
   @IsOptional()
-  color: string | null
+  color?: string
 }

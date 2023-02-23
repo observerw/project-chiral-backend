@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { ApiTags } from '@nestjs/swagger'
 import { UpdateContentDto } from './dto/content/update-content.dto'
 import { CreateEventDto } from './dto/event/create-event.dto'
+import { GetAllEventQueryDto } from './dto/event/get-all-event-query-dto'
 import { GetEventsByRangeQueryDto } from './dto/event/get-events-by-range-query.dto'
 import { UpdateEventDto } from './dto/event/update-event.dto'
 import { CreateTodoDto } from './dto/todo/create-todo.dto'
@@ -25,14 +26,14 @@ export class EventController {
     return this.eventService.getDetail(id)
   }
 
-  @Get('range')
-  getByRange(@Query() { unit, start, end }: GetEventsByRangeQueryDto) {
-    return this.eventService.getByRange(unit, start, end)
+  @Get('list')
+  getAll(dto: GetAllEventQueryDto) {
+    return this.eventService.getAll(dto)
   }
 
-  @Get('serial')
-  getBySerial(@Param('serial') serial: number) {
-    return this.getBySerial(serial)
+  @Get('list/range')
+  getByRange(@Query() { unit, start, end }: GetEventsByRangeQueryDto) {
+    return this.eventService.getByRange(unit, start, end)
   }
 
   @Get('search/name')
@@ -89,15 +90,6 @@ export class EventController {
   @Get(':id/todo')
   getTodos(@Param('id') id: number) {
     return this.eventService.getTodos(id)
-  }
-
-  /**
-   * 获取单个todo项
-   * @param id todo项id
-   */
-  @Get('todo/:id')
-  getTodo(@Param('id') id: number) {
-    return this.eventService.getTodo(id)
   }
 
   @Post(':id/todo')

@@ -1,28 +1,30 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { CharacterService } from './character.service'
 import { CreateCharacterDto } from './dto/create-character.dto'
+import { GetAllQueryDto } from './dto/get-all-query.dto'
+import { UpdateCharacterDto } from './dto/update-character.dto'
 
 @Controller('character')
 export class CharacterController {
   constructor(private readonly characterService: CharacterService) {}
-
-  @Post()
-  create(@Body() createCharacterDto: CreateCharacterDto) {
-    return this.characterService.create(createCharacterDto)
-  }
 
   @Get(':id')
   get(@Param('id') id: number) {
     return this.characterService.get(id)
   }
 
-  @Get()
-  getAll() {
-    return this.characterService.getAll()
+  @Get('list')
+  getAll(@Query() dto: GetAllQueryDto) {
+    return this.characterService.getAll(dto)
+  }
+
+  @Post()
+  create(@Body() createCharacterDto: CreateCharacterDto) {
+    return this.characterService.create(createCharacterDto)
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() updateCharacterDto: CreateCharacterDto) {
+  update(@Param('id') id: number, @Body() updateCharacterDto: UpdateCharacterDto) {
     return this.characterService.update(id, updateCharacterDto)
   }
 
