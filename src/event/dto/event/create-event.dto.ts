@@ -1,7 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { EventType } from '@prisma/client'
 import { Type } from 'class-transformer'
-import { IsDate, IsEnum, IsHexColor, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator'
+import { IsDate, IsHexColor, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator'
 
 export class CreateEventDto {
   @IsString()
@@ -14,10 +12,6 @@ export class CreateEventDto {
 
   @IsHexColor()
   color: string
-
-  @IsEnum(EventType)
-  @ApiProperty({ enum: EventType })
-  type: EventType
 
   @IsInt()
   @Min(0)
@@ -32,4 +26,24 @@ export class CreateEventDto {
   @IsDate()
   @Type(() => Date)
   end: Date
+
+  @IsInt({ each: true })
+  @Type(() => Number)
+  @IsOptional()
+  characters?: number[]
+
+  @IsInt({ each: true })
+  @Type(() => Number)
+  @IsOptional()
+  scenes?: number[]
+
+  @IsInt({ each: true })
+  @Type(() => Number)
+  @IsOptional()
+  sups?: number[]
+
+  @IsInt({ each: true })
+  @Type(() => Number)
+  @IsOptional()
+  subs?: number[]
 }

@@ -55,9 +55,13 @@ model Event {
   todos      EventTodo[]
   characters Character[]
   scenes     Scene[]
+  sups       Event[]       @relation("contains")
+  subs       Event[]       @relation("contains")
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int
+
+  @@unique([serial, projectId])
 }
 
 model EventContent {
@@ -123,7 +127,7 @@ model Scene {
   projects Project[]
 }
 
-// ----------------------------------- 设定 -------------------------------------
+// ----------------------------------- 世界观 -------------------------------------
 
 model Worldview {
   id Int @id @default(autoincrement())
