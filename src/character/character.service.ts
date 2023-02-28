@@ -63,11 +63,15 @@ export class CharacterService {
         events: { connect: events?.map(id => ({ id })) },
         projects: { connect: { id: projectId } },
       },
+      include: { events: { select: { id: true } } },
     })
 
     // await this.updateCharaMap(chara.id, [], [chara.name, ...chara.alias])
 
-    return plainToInstance(CharacterEntity, chara)
+    return plainToInstance(CharacterDetailEntity, {
+      ...chara,
+      events: chara.events.map(event => event.id),
+    })
   }
 
   async update(id: number, { events, ...rest }: UpdateCharacterDto) {
@@ -80,6 +84,7 @@ export class CharacterService {
         ...rest,
         events: { connect: events?.map(id => ({ id })) },
       },
+      include: { events: { select: { id: true } } },
     })
 
     // await this.updateCharaMap(
@@ -88,7 +93,10 @@ export class CharacterService {
     //   [chara.name, ...chara.alias],
     // )
 
-    return plainToInstance(CharacterEntity, chara)
+    return plainToInstance(CharacterDetailEntity, {
+      ...chara,
+      events: chara.events.map(event => event.id),
+    })
   }
 
   // async addAlias(id: number, alias: string) {
@@ -120,11 +128,15 @@ export class CharacterService {
   async remove(id: number) {
     const chara = await this.prismaService.character.delete({
       where: { id },
+      include: { events: { select: { id: true } } },
     })
 
     // await this.updateCharaMap(chara.id, [chara.name, ...chara.alias], [])
 
-    return plainToInstance(CharacterEntity, chara)
+    return plainToInstance(CharacterDetailEntity, {
+      ...chara,
+      events: chara.events.map(event => event.id),
+    })
   }
 
   async searchByName(text: string) {

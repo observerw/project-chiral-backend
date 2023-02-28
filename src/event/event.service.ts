@@ -127,11 +127,23 @@ export class EventService {
         sups: { connect: sups?.map(id => ({ id })) },
         subs: { connect: subs?.map(id => ({ id })) },
       },
+      include: {
+        characters: { select: { id: true } },
+        scenes: { select: { id: true } },
+        sups: { select: { id: true } },
+        subs: { select: { id: true } },
+      },
     })
 
-    await this.graphService.createEvent(result.id)
+    await this.graphService.create(result.id)
 
-    return plainToInstance(EventEntity, result)
+    return plainToInstance(EventDetailEntity, {
+      ...result,
+      characters: result.characters.map(v => v.id),
+      scenes: result.scenes.map(v => v.id),
+      sups: result.sups.map(v => v.id),
+      subs: result.subs.map(v => v.id),
+    })
   }
 
   async update(id: number, { characters, scenes, sups, subs, ...rest }: UpdateEventDto) {
@@ -145,29 +157,42 @@ export class EventService {
         sups: { connect: sups?.map(id => ({ id })) },
         subs: { connect: subs?.map(id => ({ id })) },
       },
+      include: {
+        characters: { select: { id: true } },
+        scenes: { select: { id: true } },
+        sups: { select: { id: true } },
+        subs: { select: { id: true } },
+      },
     })
 
-    return plainToInstance(EventEntity, result)
+    return plainToInstance(EventDetailEntity, {
+      ...result,
+      characters: result.characters.map(v => v.id),
+      scenes: result.scenes.map(v => v.id),
+      sups: result.sups.map(v => v.id),
+      subs: result.subs.map(v => v.id),
+    })
   }
 
-  async remove(id: number, cascade: boolean) {
+  async remove(id: number) {
     // TODO 软删除
-    const [event] = await Promise.all([
-      this.prismaService.event.delete({
-        where: { id },
-      }),
-      this.graphService.removeEvent(id),
-    ])
+    const result = await this.prismaService.event.delete({
+      where: { id },
+      include: {
+        characters: { select: { id: true } },
+        scenes: { select: { id: true } },
+        sups: { select: { id: true } },
+        subs: { select: { id: true } },
+      },
+    })
 
-    const events = [plainToInstance(EventEntity, event)]
-
-    if (cascade) {
-      const subIds = (await this.graphService.getSubEvents(id)).map(e => e.properties.id)
-      const subEvents = await Promise.all(subIds.map(id => this.remove(id, true)))
-      events.push(...subEvents.flat())
-    }
-
-    return events
+    return plainToInstance(EventDetailEntity, {
+      ...result,
+      characters: result.characters.map(v => v.id),
+      scenes: result.scenes.map(v => v.id),
+      sups: result.sups.map(v => v.id),
+      subs: result.subs.map(v => v.id),
+    })
   }
 
   async connect(id: number, type: 'scenes' | 'characters' | 'sups' | 'subs', connectIds: number[]) {

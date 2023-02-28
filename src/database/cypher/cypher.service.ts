@@ -1,3 +1,4 @@
+import util from 'util'
 import type { OnApplicationShutdown } from '@nestjs/common'
 import { Injectable } from '@nestjs/common'
 import { Connection } from 'cypher-query-builder'
@@ -34,20 +35,25 @@ export class CypherService extends Connection implements OnApplicationShutdown {
   }
 
   // FIXME 待测试
-  // execute<T>(
-  //   strs: TemplateStringsArray,
-  //   ...args: any[]
-  // ) {
-  //   let query = ''
-  //   for (let i = 0; i < strs.length + args.length; ++i) {
-  //     if (i % 2 === 0) {
-  //       query += strs[i / 2]
-  //     }
-  //     else {
-  //       query += `${i}`
-  //     }
-  //   }
+  execute(
+    strs: TemplateStringsArray,
+    ...args: any[]
+  ) {
+    let query = ''
+    for (let i = 0; i < strs.length + args.length; ++i) {
+      const pos = Math.floor(i / 2)
+      if (i % 2 === 0) {
+        query += strs[pos]
+      }
+      else {
+        const value = args[pos]
+        query += typeof value === 'object'
+        // 转换为不含双引号的JSON
+          ? util.inspect(value)
+          : `${value}`
+      }
+    }
 
-  //   return this.raw(query).run<T>()
-  // }
+    return this.raw(query)
+  }
 }

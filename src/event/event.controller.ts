@@ -56,8 +56,8 @@ export class EventController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number, @Query('cascade') cascade: boolean) {
-    return this.eventService.remove(id, cascade)
+  remove(@Param('id') id: number) {
+    return this.eventService.remove(id)
   }
 
   @Put(':id/characters')
