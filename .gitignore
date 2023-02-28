@@ -38,3 +38,5 @@ lerna-debug.log*
 /secrets
 
 .env*
+
+swagger.json
