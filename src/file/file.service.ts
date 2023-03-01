@@ -39,14 +39,17 @@ export class FileService {
   async checkTempFile(name: string) {
     try {
       await stat(path.join(tempFilePath, name))
-      return true
+      return path.join('static', 'temp', name)
     }
     catch (e) {
-      return false
+      return ''
     }
   }
 
   async registerFile({ name, position, replace = false }: RegisterFileDto) {
+    const dirPath = path.join(filesPath, position)
+    const filePath = path.join(dirPath, name)
+
     // 如果文件处于删除过程中，取消删除
     if (this.schedulerRegistry.doesExist('timeout', removeFile(filesPath, position, name))) {
       this.schedulerRegistry.deleteTimeout(removeFile(filesPath, position, name))
@@ -54,7 +57,7 @@ export class FileService {
     if (replace) {
       // 如果replace，将指定位置的文件删除
       try {
-        const files = await readdir(path.join(filesPath, position))
+        const files = await readdir(dirPath)
         for (const file of files) {
           if (file === name) { continue }
           const filePath = path.join(filesPath, position, file)
@@ -69,34 +72,34 @@ export class FileService {
 
     try {
       // 如果文件存在，直接返回
-      await stat(path.join(filesPath, position, name))
-      return true
+      await stat(filePath)
+      return path.join('static', 'files', position, name)
     }
     catch (e) {
       // 如果文件不存在，将temp文件夹中的文件移动到指定位置
-      return this._registerTempFile(name, position)
+      return await this._registerTempFile(position, name)
     }
   }
 
   async unregisterFile({ name = '', position }: UnregisterFileDto) {
+    const filePath = path.join(filesPath, position, name)
     try {
-      await stat(path.join(filesPath, position, name))
-      const filePath = path.join(filesPath, position, name)
+      await stat(filePath)
       this.schedulerRegistry.addTimeout(
         removeFile(filePath),
         setTimeout(() => this._removeFile(filePath), 1000 * 60 * 60),
       )
-      return true
+      return path.join('static', 'files', position, name)
     }
     catch (e) {
-      return false
+      return ''
     }
   }
 
   /**
    * 将temp文件夹中的文件移动到指定位置
    */
-  async _registerTempFile(name: string, position: string) {
+  async _registerTempFile(position: string, name: string) {
     try {
       await stat(path.join(tempFilePath, name))
       await mkdir(path.join(filesPath, position), { recursive: true })
@@ -104,10 +107,10 @@ export class FileService {
         path.join(tempFilePath, name),
         path.join(filesPath, position, name),
       )
-      return true
+      return path.join('static', 'files', position, name)
     }
     catch (e) {
-      return false
+      return ''
     }
   }
 
