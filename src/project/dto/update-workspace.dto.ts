@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer'
 import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator'
 
 export class UpdateWorkspaceDto {
@@ -11,5 +12,6 @@ export class UpdateWorkspaceDto {
 
   @IsBoolean()
   @IsOptional()
+  @Type(() => Boolean)
   lock?: boolean
 }

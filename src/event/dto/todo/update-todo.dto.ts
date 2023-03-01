@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer'
 import { IsBoolean, IsHexColor, IsOptional } from 'class-validator'
 
 export class UpdateTodoDto {
@@ -7,5 +8,6 @@ export class UpdateTodoDto {
 
   @IsBoolean()
   @IsOptional()
+  @Type(() => Boolean)
   checked?: boolean
 }

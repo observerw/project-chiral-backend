@@ -5,6 +5,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core'
 import { PrismaModule } from 'nestjs-prisma'
 import { RabbitMQModule } from '@nestjs-plus/rabbitmq'
 import { RedisModule } from '@liaoliaots/nestjs-redis'
+import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
@@ -15,6 +16,9 @@ import { EventModule } from './event/event.module'
 import { CypherService } from './database/cypher/cypher.service'
 import { SceneModule } from './scene/scene.module'
 import { WorldviewModule } from './worldview/worldview.module'
+import { TaskService } from './task/task.service'
+import { FileModule } from './file/file.module'
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +39,7 @@ import { WorldviewModule } from './worldview/worldview.module'
         url: process.env.REDIS_URL as string,
       },
     }),
+    ScheduleModule.forRoot(),
     RequestContextModule,
     EventModule,
     UserModule,
@@ -43,6 +48,7 @@ import { WorldviewModule } from './worldview/worldview.module'
     CharacterModule,
     SceneModule,
     WorldviewModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [
@@ -58,6 +64,7 @@ import { WorldviewModule } from './worldview/worldview.module'
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
+    TaskService,
   ],
 })
 export class AppModule { }
