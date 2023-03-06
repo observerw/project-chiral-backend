@@ -21,6 +21,8 @@ export class EventEntity implements Event {
   start: Date
   end: Date
 
+  done: boolean
+
   contentId: number | null
   projectId: number
 }

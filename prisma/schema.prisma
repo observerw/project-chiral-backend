@@ -58,6 +58,8 @@ model Event {
   sups       Event[]       @relation("contains")
   subs       Event[]       @relation("contains")
 
+  done Boolean @default(false)
+
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int
 
@@ -69,7 +71,8 @@ model EventContent {
 
   updatedAt DateTime @updatedAt
 
-  content String @default("")
+  cover   String?
+  content String  @default("")
 
   event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId Int   @unique
