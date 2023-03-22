@@ -9,12 +9,12 @@ export class WorldviewController {
 
   @Post()
   create(@Body() dto: CreateWorldviewDto) {
-    return this.worldviewService.createWorldview(dto)
+    return this.worldviewService.create(dto)
   }
 
   @Get(':id')
   get(@Param('id') id: number) {
-    return this.worldviewService.get(+id)
+    return this.worldviewService.get(id)
   }
 
   @Post(':id')

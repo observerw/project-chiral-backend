@@ -106,9 +106,9 @@ model Character {
   start DateTime?
   end   DateTime?
 
-  events   Event[]
-  // 角色可以复用到其他项目中
-  projects Project[]
+  events    Event[]
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int     @unique
 }
 
 model Scene {
@@ -121,13 +121,13 @@ model Scene {
   deleted DateTime?
 
   // 某个场景可能是另一个场景的子场景，因此需要自引用
-  super   Scene?  @relation("contains", fields: [superId], references: [id])
-  superId Int?    @unique
-  subs    Scene[] @relation("contains")
+  super Scene?  @relation("contains", fields: [sup], references: [id])
+  sup   Int?    @unique
+  subs  Scene[] @relation("contains")
 
-  events   Event[]
-  // 场景可以复用到其他项目中
-  projects Project[]
+  events    Event[]
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int     @unique
 }
 
 // ----------------------------------- 世界观 -------------------------------------
@@ -135,20 +135,32 @@ model Scene {
 model Worldview {
   id Int @id @default(autoincrement())
 
-  name        String
-  description String?
-  content     String   @default("")
-  images      String[]
+  name   String
+  images String[]
 
   deleted DateTime?
 
   // 文件夹结构
-  super   Worldview?  @relation("contains", fields: [superId], references: [id])
-  superId Int?        @unique
-  subs    Worldview[] @relation("contains")
+  super Worldview?  @relation("contains", fields: [sup], references: [id])
+  sup   Int?        @unique
+  subs  Worldview[] @relation("contains")
 
-  // 世界观可以复用到其他项目中
-  projects Project[]
+  project            Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId          Int               @unique
+  WorldviewContent   WorldviewContent? @relation()
+  worldviewContentId Int?
+}
+
+model WorldviewContent {
+  id Int @id @default(autoincrement())
+
+  updatedAt DateTime @updatedAt
+
+  cover   String?
+  content String  @default("")
+
+  worldview   Worldview @relation(fields: [worldviewId], references: [id], onDelete: Cascade)
+  worldviewId Int       @unique
 }
 
 // ----------------------------------- 项目 --------------------------------------

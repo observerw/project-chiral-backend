@@ -6,4 +6,6 @@ export class SceneEntity implements Scene {
   description: string | null
   deleted: Date | null
   superId: number | null
+
+  projectId: number
 }

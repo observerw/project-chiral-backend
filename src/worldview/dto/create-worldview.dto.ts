@@ -7,4 +7,7 @@ export class CreateWorldviewDto {
   @IsString()
   @IsOptional()
   description?: string
+
+  super?: number
+  subs?: number[]
 }

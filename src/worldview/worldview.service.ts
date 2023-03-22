@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
+import { getProjectId } from 'src/utils/get-header'
 import type { CreateWorldviewDto } from './dto/create-worldview.dto'
 import type { UpdateWorldviewDto } from './dto/update-worldview.dto'
 import { WorldviewEntity } from './entities/worldview.entity'
@@ -11,7 +12,7 @@ export class WorldviewService {
     private prismaService: PrismaService,
   ) {}
 
-  async createWorldview(dto: CreateWorldviewDto) {
+  async create(dto: CreateWorldviewDto) {
     const worldview = await this.prismaService.worldview.create({
       data: dto,
     })
@@ -25,6 +26,16 @@ export class WorldviewService {
     })
 
     return plainToInstance(WorldviewEntity, worldview)
+  }
+
+  async getAll() {
+    const projectId = getProjectId()
+
+    const worldviews = await this.prismaService.worldview.findMany({
+      where: { projectId },
+    })
+
+    return worldviews.map(v => plainToInstance(WorldviewEntity, v))
   }
 
   async update(id: number, dto: UpdateWorldviewDto) {

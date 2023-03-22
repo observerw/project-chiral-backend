@@ -8,4 +8,6 @@ export class WorldviewEntity implements Worldview {
   images: string[]
   deleted: Date | null
   superId: number | null
+
+  projectId: number
 }
