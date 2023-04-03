@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import type { Relation } from 'cypher-query-builder'
-import { RelationType } from 'src/graph/schema'
+import { RelationEnum, RelationType } from 'src/graph/schema'
 
 export class RelationProperty {
   projectId: number
@@ -15,6 +15,6 @@ export class RelationEntity implements Relation<RelationProperty> {
   @Type(() => RelationEntity)
   properties: RelationProperty
 
-  @ApiProperty({ enum: RelationType })
+  @ApiProperty({ enum: RelationEnum })
   label: RelationType
 }

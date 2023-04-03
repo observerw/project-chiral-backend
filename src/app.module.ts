@@ -13,11 +13,12 @@ import { ProjectModule } from './project/project.module'
 import { UserModule } from './user/user.module'
 import { CharacterModule } from './character/character.module'
 import { EventModule } from './event/event.module'
-import { CypherService } from './database/cypher/cypher.service'
 import { SceneModule } from './scene/scene.module'
 import { WorldviewModule } from './worldview/worldview.module'
 import { TaskService } from './task/task.service'
 import { FileModule } from './file/file.module'
+import { GraphModule } from './graph/graph.module'
+import { CypherService } from './database/cypher/cypher.service'
 
 @Module({
   imports: [
@@ -49,11 +50,11 @@ import { FileModule } from './file/file.module'
     SceneModule,
     WorldviewModule,
     FileModule,
+    GraphModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    CypherService,
     // JWT接口权限验证
     // {
     //   provide: APP_GUARD,
@@ -65,6 +66,7 @@ import { FileModule } from './file/file.module'
       useClass: ClassSerializerInterceptor,
     },
     TaskService,
+    CypherService,
   ],
 })
 export class AppModule { }

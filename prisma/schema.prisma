@@ -180,6 +180,7 @@ model Settings {
   id Int @id @default(autoincrement())
 
   darkMode Boolean @default(false)
+  language String  @default("CN")
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int     @unique

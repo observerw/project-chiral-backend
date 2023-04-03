@@ -8,8 +8,8 @@ import { encryptPassword } from 'src/utils/crypto'
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async validate(username: string, password: string) {

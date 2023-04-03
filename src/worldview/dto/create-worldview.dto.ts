@@ -8,6 +8,6 @@ export class CreateWorldviewDto {
   @IsOptional()
   description?: string
 
-  super?: number
+  sup?: number
   subs?: number[]
 }

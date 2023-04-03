@@ -37,9 +37,9 @@ export class CypherService extends Connection {
 
 const main = async () => {
   const conn = new CypherService(
-    'neo4j+s://f2bb2c9d.databases.neo4j.io',
+    'bolt://120.53.230.250:7687',
     'neo4j',
-    'oYgLYOJNZqbemx73y9-MTLIuourAsGXNgKkiRgaAL6I',
+    'neo4j',
   )
 
   const id = 2

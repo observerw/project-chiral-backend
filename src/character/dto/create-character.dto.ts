@@ -34,9 +34,4 @@ export class CreateCharacterDto {
   @IsOptional()
   @Type(() => Date)
   end?: Date
-
-  @IsInt({ each: true })
-  @Type(() => Number)
-  @IsOptional()
-  events?: number[]
 }

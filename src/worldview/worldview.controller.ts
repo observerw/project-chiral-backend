@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { WorldviewService } from './worldview.service'
 import { CreateWorldviewDto } from './dto/create-worldview.dto'
 import { UpdateWorldviewDto } from './dto/update-worldview.dto'
 
+@ApiTags('worldview')
 @Controller('worldview')
 export class WorldviewController {
   constructor(private readonly worldviewService: WorldviewService) {}

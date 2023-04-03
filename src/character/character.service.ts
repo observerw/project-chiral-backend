@@ -4,18 +4,20 @@ import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
 import { Redis } from 'ioredis'
 import { getProjectId } from 'src/utils/get-header'
+import { GraphService } from 'src/graph/graph.service'
+import { CHARA } from 'test/test'
 import type { CreateCharacterDto } from './dto/create-character.dto'
 import type { UpdateCharacterDto } from './dto/update-character.dto'
 import { CharacterEntity } from './entities/character.entity'
 import { CharaTable } from './const/redis'
 import type { GetAllQueryDto } from './dto/get-all-query.dto'
-import { CharacterDetailEntity } from './entities/character-detail.entity'
 
 @Injectable()
 export class CharacterService {
   constructor(
-    private prismaService: PrismaService,
-    @InjectRedis() private redis: Redis,
+    private readonly prismaService: PrismaService,
+    private readonly graphService: GraphService,
+    @InjectRedis() private readonly redis: Redis,
   ) {}
 
   async get(id: number) {
@@ -26,28 +28,10 @@ export class CharacterService {
     return plainToInstance(CharacterEntity, chara)
   }
 
-  async getDetail(id: number) {
-    const { events, ...chara } = await this.prismaService.character.findUniqueOrThrow({
-      where: { id },
-      include: {
-        events: { select: { id: true } },
-      },
-    })
-
-    return plainToInstance(CharacterDetailEntity, {
-      ...chara,
-      events: events.map(event => event.id),
-    })
-  }
-
   async getAll({ page = 0, size }: GetAllQueryDto) {
     const projectId = getProjectId()
     const charas = await this.prismaService.character.findMany({
-      where: {
-        projects: {
-          some: { id: projectId },
-        },
-      },
+      where: { projectId },
       skip: page * (size ?? 0),
       take: size,
     })
@@ -55,36 +39,25 @@ export class CharacterService {
     return charas.map(chara => plainToInstance(CharacterEntity, chara))
   }
 
-  async create({ events, ...rest }: CreateCharacterDto) {
+  async create(dto: CreateCharacterDto) {
     const projectId = getProjectId()
     const chara = await this.prismaService.character.create({
       data: {
-        ...rest,
-        events: { connect: events?.map(id => ({ id })) },
-        projects: { connect: { id: projectId } },
+        ...dto,
+        projectId,
       },
-      include: { events: { select: { id: true } } },
     })
 
     // await this.updateCharaMap(chara.id, [], [chara.name, ...chara.alias])
+    await this.graphService.createNode({ type: CHARA, id: chara.id })
 
-    return plainToInstance(CharacterDetailEntity, {
-      ...chara,
-      events: chara.events.map(event => event.id),
-    })
+    return plainToInstance(CharacterEntity, chara)
   }
 
-  async update(id: number, { events, ...rest }: UpdateCharacterDto) {
-    const oldChara = await this.prismaService.character.findUniqueOrThrow({
-      where: { id },
-    })
+  async update(id: number, dto: UpdateCharacterDto) {
     const chara = await this.prismaService.character.update({
       where: { id },
-      data: {
-        ...rest,
-        events: { connect: events?.map(id => ({ id })) },
-      },
-      include: { events: { select: { id: true } } },
+      data: dto,
     })
 
     // await this.updateCharaMap(
@@ -93,10 +66,7 @@ export class CharacterService {
     //   [chara.name, ...chara.alias],
     // )
 
-    return plainToInstance(CharacterDetailEntity, {
-      ...chara,
-      events: chara.events.map(event => event.id),
-    })
+    return plainToInstance(CharacterEntity, chara)
   }
 
   // async addAlias(id: number, alias: string) {
@@ -128,15 +98,12 @@ export class CharacterService {
   async remove(id: number) {
     const chara = await this.prismaService.character.delete({
       where: { id },
-      include: { events: { select: { id: true } } },
     })
 
     // await this.updateCharaMap(chara.id, [chara.name, ...chara.alias], [])
+    await this.graphService.removeNode({ type: CHARA, id })
 
-    return plainToInstance(CharacterDetailEntity, {
-      ...chara,
-      events: chara.events.map(event => event.id),
-    })
+    return plainToInstance(CharacterEntity, chara)
   }
 
   async searchByName(text: string) {
@@ -150,28 +117,6 @@ export class CharacterService {
     })
 
     return charas.map(chara => plainToInstance(CharacterEntity, chara))
-  }
-
-  async connect(id: number, type: 'events', connectIds: number[]) {
-    const result = await this.prismaService.character.update({
-      where: { id },
-      data: {
-        [type]: { connect: connectIds.map(id => ({ id })) },
-      },
-    })
-
-    return plainToInstance(CharacterEntity, result)
-  }
-
-  async disconnect(id: number, type: 'events', disconnectIds: number[]) {
-    const result = await this.prismaService.character.update({
-      where: { id },
-      data: {
-        [type]: { disconnect: disconnectIds.map(id => ({ id })) },
-      },
-    })
-
-    return plainToInstance(CharacterEntity, result)
   }
 
   // ---------------------------------- redis ---------------------------------

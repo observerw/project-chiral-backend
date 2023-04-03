@@ -9,12 +9,18 @@ import { WorldviewEntity } from './entities/worldview.entity'
 @Injectable()
 export class WorldviewService {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async create(dto: CreateWorldviewDto) {
+    const projectId = getProjectId()
     const worldview = await this.prismaService.worldview.create({
-      data: dto,
+      data: {
+        ...dto,
+        super: { connect: { id: dto.sup } },
+        subs: { connect: dto.subs?.map(id => ({ id })) },
+        project: { connect: { id: projectId } },
+      },
     })
 
     return plainToInstance(WorldviewEntity, worldview)
@@ -41,7 +47,11 @@ export class WorldviewService {
   async update(id: number, dto: UpdateWorldviewDto) {
     const worldview = await this.prismaService.worldview.update({
       where: { id },
-      data: dto,
+      data: {
+        ...dto,
+        super: { connect: { id: dto.sup } },
+        subs: { connect: dto.subs?.map(id => ({ id })) },
+      },
     })
 
     return plainToInstance(WorldviewEntity, worldview)

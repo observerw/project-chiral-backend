@@ -26,24 +26,4 @@ export class CreateEventDto {
   @IsDate()
   @Type(() => Date)
   end: Date
-
-  @IsInt({ each: true })
-  @Type(() => Number)
-  @IsOptional()
-  characters?: number[]
-
-  @IsInt({ each: true })
-  @Type(() => Number)
-  @IsOptional()
-  scenes?: number[]
-
-  @IsInt({ each: true })
-  @Type(() => Number)
-  @IsOptional()
-  sups?: number[]
-
-  @IsInt({ each: true })
-  @Type(() => Number)
-  @IsOptional()
-  subs?: number[]
 }
