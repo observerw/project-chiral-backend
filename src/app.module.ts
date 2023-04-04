@@ -19,6 +19,7 @@ import { TaskService } from './task/task.service'
 import { FileModule } from './file/file.module'
 import { GraphModule } from './graph/graph.module'
 import { CypherService } from './database/cypher/cypher.service'
+import { AiModule } from './ai/ai.module'
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { CypherService } from './database/cypher/cypher.service'
     WorldviewModule,
     FileModule,
     GraphModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [

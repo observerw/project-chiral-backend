@@ -1,16 +1,16 @@
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
-import { QaService } from './qa.service'
+import { AiService } from './ai.service'
 
-describe('QaService', () => {
-  let service: QaService
+describe('AiService', () => {
+  let service: AiService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [QaService],
+      providers: [AiService],
     }).compile()
 
-    service = module.get<QaService>(QaService)
+    service = module.get<AiService>(AiService)
   })
 
   it('should be defined', () => {

@@ -1,19 +1,19 @@
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
-import { EntityService } from './entity.service'
+import { AiController } from './ai.controller'
 
-describe('EntityService', () => {
-  let service: EntityService
+describe('AiController', () => {
+  let controller: AiController
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EntityService],
+      controllers: [AiController],
     }).compile()
 
-    service = module.get<EntityService>(EntityService)
+    controller = module.get<AiController>(AiController)
   })
 
   it('should be defined', () => {
-    expect(service).toBeDefined()
+    expect(controller).toBeDefined()
   })
 })
