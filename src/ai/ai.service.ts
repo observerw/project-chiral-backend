@@ -12,29 +12,39 @@ export class AiService {
     private readonly eventService: EventService,
   ) {}
 
-  async summarizeTitle(id: number) {
+  async updateEventName(id: number) {
     const content = (await this.eventService.getContent(id)).content
     const { data } = await this.conn.request<ResponseDto>({
       exchange: '',
       routingKey: 'summarize_title',
+      timeout: 50000,
       payload: {
         doc: cleanHTML(content),
       },
     })
 
+    await this.eventService.update(id, {
+      name: data,
+    })
+
     return data
   }
 
-  async summarizeDesc(id: number, dto: SummarizeDescDto) {
+  async updateEventDesc(id: number, dto: SummarizeDescDto) {
     const content = (await this.eventService.getContent(id)).content
 
     const { data } = await this.conn.request<ResponseDto>({
       exchange: '',
       routingKey: 'summarize_desc',
+      timeout: 50000,
       payload: {
         ...dto,
         doc: cleanHTML(content),
       },
+    })
+
+    await this.eventService.update(id, {
+      description: data,
     })
 
     return data

@@ -17,8 +17,6 @@ export class WorldviewService {
     const worldview = await this.prismaService.worldview.create({
       data: {
         ...dto,
-        super: { connect: { id: dto.sup } },
-        subs: { connect: dto.subs?.map(id => ({ id })) },
         project: { connect: { id: projectId } },
       },
     })
@@ -47,11 +45,7 @@ export class WorldviewService {
   async update(id: number, dto: UpdateWorldviewDto) {
     const worldview = await this.prismaService.worldview.update({
       where: { id },
-      data: {
-        ...dto,
-        super: { connect: { id: dto.sup } },
-        subs: { connect: dto.subs?.map(id => ({ id })) },
-      },
+      data: dto,
     })
 
     return plainToInstance(WorldviewEntity, worldview)

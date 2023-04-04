@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common'
+import { Body, Controller, Param, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { AiService } from './ai.service'
 import { SummarizeDescDto } from './dto/summarize-desc.dto'
@@ -10,13 +10,13 @@ export class AiController {
     private readonly aiService: AiService,
   ) {}
 
-  @Get(':id/summarize/title')
-  async summarizeTitle(@Param('id') id: number) {
-    return this.aiService.summarizeTitle(id)
+  @Post(':id/summarize/title')
+  async updateEventName(@Param('id') id: number) {
+    return this.aiService.updateEventName(id)
   }
 
-  @Get(':id/summarize/desc')
-  async summarizeDesc(@Param('id') id: number, @Query() dto: SummarizeDescDto) {
-    return this.aiService.summarizeDesc(id, dto)
+  @Post(':id/summarize/desc')
+  async updateEventDesc(@Param('id') id: number, @Body() dto: SummarizeDescDto) {
+    return this.aiService.updateEventDesc(id, dto)
   }
 }

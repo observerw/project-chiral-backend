@@ -20,14 +20,11 @@ export class SceneService {
     return plainToInstance(SceneEntity, scene)
   }
 
-  async create({ events, sup, subs, ...rest }: CreateSceneDto) {
+  async create(dto: CreateSceneDto) {
     const projectId = getProjectId()
     const scene = await this.prismaService.scene.create({
       data: {
-        ...rest,
-        super: { connect: { id: sup } },
-        subs: { connect: subs?.map(id => ({ id })) },
-        events: { connect: events?.map(id => ({ id })) },
+        ...dto,
         project: { connect: { id: projectId } },
       },
     })
@@ -35,15 +32,10 @@ export class SceneService {
     return plainToInstance(SceneEntity, scene)
   }
 
-  async update(id: number, { events, sup, subs, ...rest }: UpdateSceneDto) {
+  async update(id: number, dto: UpdateSceneDto) {
     const scene = await this.prismaService.scene.update({
       where: { id },
-      data: {
-        ...rest,
-        super: { connect: { id: sup } },
-        subs: { connect: subs?.map(id => ({ id })) },
-        events: { connect: events?.map(id => ({ id })) },
-      },
+      data: dto,
     })
 
     return plainToInstance(SceneEntity, scene)

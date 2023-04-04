@@ -50,13 +50,9 @@ model Event {
 
   type EventType @default(ATOM)
 
-  content    EventContent? @relation()
-  contentId  Int?
-  todos      EventTodo[]
-  characters Character[]
-  scenes     Scene[]
-  sups       Event[]       @relation("contains")
-  subs       Event[]       @relation("contains")
+  content   EventContent? @relation()
+  contentId Int?
+  todos     EventTodo[]
 
   done Boolean @default(false)
 
@@ -106,7 +102,6 @@ model Character {
   start DateTime?
   end   DateTime?
 
-  events    Event[]
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int     @unique
 }
@@ -120,12 +115,6 @@ model Scene {
 
   deleted DateTime?
 
-  // 某个场景可能是另一个场景的子场景，因此需要自引用
-  super Scene?  @relation("contains", fields: [sup], references: [id])
-  sup   Int?    @unique
-  subs  Scene[] @relation("contains")
-
-  events    Event[]
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int     @unique
 }
@@ -145,10 +134,10 @@ model Worldview {
   sup   Int?        @unique
   subs  Worldview[] @relation("contains")
 
-  project            Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId          Int               @unique
-  WorldviewContent   WorldviewContent? @relation()
-  worldviewContentId Int?
+  project   Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int               @unique
+  content   WorldviewContent? @relation()
+  contentId Int?
 }
 
 model WorldviewContent {
@@ -180,7 +169,7 @@ model Settings {
   id Int @id @default(autoincrement())
 
   darkMode Boolean @default(false)
-  language String  @default("CN")
+  lang     String  @default("cn")
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int     @unique
