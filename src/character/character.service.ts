@@ -9,7 +9,6 @@ import { CHARA } from 'test/test'
 import type { CreateCharacterDto } from './dto/create-character.dto'
 import type { UpdateCharacterDto } from './dto/update-character.dto'
 import { CharacterEntity } from './entities/character.entity'
-import { CharaTable } from './const/redis'
 import type { GetAllQueryDto } from './dto/get-all-query.dto'
 
 @Injectable()
@@ -48,8 +47,10 @@ export class CharacterService {
       },
     })
 
-    // await this.updateCharaMap(chara.id, [], [chara.name, ...chara.alias])
-    await this.graphService.createNode({ type: CHARA, id: chara.id })
+    await this.graphService.createNode(
+      { type: CHARA, id: chara.id },
+      dto.name,
+    )
 
     return plainToInstance(CharacterEntity, chara)
   }
@@ -60,47 +61,14 @@ export class CharacterService {
       data: dto,
     })
 
-    // await this.updateCharaMap(
-    //   chara.id,
-    //   [oldChara.name, ...oldChara.alias],
-    //   [chara.name, ...chara.alias],
-    // )
-
     return plainToInstance(CharacterEntity, chara)
   }
-
-  // async addAlias(id: number, alias: string) {
-  //   const chara = await this.prismaService.character.update({
-  //     where: { id },
-  //     data: { alias: { push: alias } },
-  //   })
-
-  // await this.updateCharaMap(chara.id, [], [alias])
-
-  //   return plainToInstance(CharacterEntity, chara)
-  // }
-
-  // async removeAlias(id: number, alias: string) {
-  //   const { alias: oldAlias } = await this.prismaService.character.findUniqueOrThrow({
-  //     where: { id },
-  //     select: { alias: true },
-  //   })
-  //   const chara = await this.prismaService.character.update({
-  //     where: { id },
-  //     data: { alias: oldAlias.filter(a => a !== alias) },
-  //   })
-
-  // await this.updateCharaMap(chara.id, [alias], [])
-
-  //   return plainToInstance(CharacterEntity, chara)
-  // }
 
   async remove(id: number) {
     const chara = await this.prismaService.character.delete({
       where: { id },
     })
 
-    // await this.updateCharaMap(chara.id, [chara.name, ...chara.alias], [])
     await this.graphService.removeNode({ type: CHARA, id })
 
     return plainToInstance(CharacterEntity, chara)
@@ -119,16 +87,31 @@ export class CharacterService {
     return charas.map(chara => plainToInstance(CharacterEntity, chara))
   }
 
-  // ---------------------------------- redis ---------------------------------
+  async addAlias(id: number, alias: string) {
+    const chara = await this.prismaService.character.update({
+      where: { id },
+      data: {
+        alias: { push: alias },
+      },
+    })
 
-  async updateCharaMap(id: number, oldNames: string[], newNames: string[]) {
-    const projectId = getProjectId()
-    await this.redis.hdel(CharaTable(projectId), ...oldNames)
-    await this.redis.hmset(CharaTable(projectId), newNames.map(name => [name, id]))
+    return plainToInstance(CharacterEntity, chara)
   }
 
-  async checkNameDuplication(name: string) {
-    const projectId = getProjectId()
-    return await this.redis.hget(CharaTable(projectId), name) !== null
+  async removeAlias(id: number, alias: string) {
+    // FIXME 两次查询
+    const existAlias = (await this.prismaService.character.findUniqueOrThrow({
+      where: { id },
+      select: { alias: true },
+    })).alias
+
+    const chara = await this.prismaService.character.update({
+      where: { id },
+      data: {
+        alias: existAlias.filter(a => a !== alias),
+      },
+    })
+
+    return plainToInstance(CharacterEntity, chara)
   }
 }

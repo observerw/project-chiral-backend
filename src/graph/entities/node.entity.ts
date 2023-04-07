@@ -7,6 +7,7 @@ import { NodeEnum } from 'src/graph/schema'
 export class NodeProperty {
   id: number
   projectId: number
+  name: string
 }
 
 export class NodeEntity implements Node<NodeProperty> {

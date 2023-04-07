@@ -34,6 +34,14 @@ export class EventService {
     return plainToInstance(EventEntity, event)
   }
 
+  async getBatch(ids: number[]) {
+    const events = await this.prismaService.event.findMany({
+      where: { id: { in: ids } },
+    })
+
+    return events.map(v => plainToInstance(EventEntity, v))
+  }
+
   async getAll({ size, page = 0 }: GetAllEventQueryDto) {
     const projectId = getProjectId()
     const results = await this.prismaService.event.findMany({
@@ -107,7 +115,10 @@ export class EventService {
       },
     })
 
-    await this.graphService.createNode({ type: EVENT, id: result.id })
+    await this.graphService.createNode(
+      { type: EVENT, id: result.id },
+      `${result.serial}. ${result.name}`,
+    )
 
     return plainToInstance(EventEntity, result)
   }

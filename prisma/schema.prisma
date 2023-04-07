@@ -104,6 +104,8 @@ model Character {
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int     @unique
+
+  @@unique([projectId, name])
 }
 
 model Scene {

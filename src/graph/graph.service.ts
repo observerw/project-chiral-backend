@@ -8,7 +8,8 @@ import { NodeEntity } from './entities/node.entity'
 import { RelationEntity } from './entities/relation.entity'
 import { RelationsEntity } from './entities/relations.entity'
 import type { RelationType } from './schema'
-import { RelationSchema } from './schema'
+import { EVENT, INCLUDES, RelationSchema } from './schema'
+import { TreeNodeEntity } from './entities/tree-node.entity'
 
 @Injectable()
 export class GraphService {
@@ -57,11 +58,11 @@ export class GraphService {
     return plainToInstance(RelationEntity, query?.r)
   }
 
-  async createNode({ type, id }: NodeIdDto) {
+  async createNode({ type, id }: NodeIdDto, name: string) {
     const projectId = getProjectId()
 
     const query = await this.cypherService.execute`
-    create (n:${type} ${{ id, projectId }})
+    create (n:${type} ${{ id, projectId, name }})
     return n
     `.run()[0]
 
@@ -76,6 +77,44 @@ export class GraphService {
     `.run()[0]
 
     return plainToInstance(NodeEntity, query?.n)
+  }
+
+  /**
+   * 按照由近及远的顺序给出所有的上级事件
+   */
+  async getSupEvents(id: number) {
+    const sups = await this.cypherService.execute`
+    match (sup:${EVENT})-[:${INCLUDES} *0..]->(sub:${EVENT} ${{ id }})
+    return sup
+    `.run()
+
+    return sups.map(sup => plainToInstance(NodeEntity, sup.sup))
+  }
+
+  _nodeToTree(nodes: NodeEntity[][]): TreeNodeEntity[] {
+    const root = new TreeNodeEntity(-1)
+    const lookup = new Map<number, TreeNodeEntity>()
+
+    let sup: TreeNodeEntity
+    for (const path of nodes) {
+      sup = root
+
+      for (const node of path.reverse()) {
+        if (!lookup.has(node.properties.id)) {
+          lookup.set(node.properties.id, new TreeNodeEntity(node.properties.id))
+        }
+        const treeNode = lookup.get(node.properties.id)
+        if (!treeNode) { throw new Error('unreachable') }
+
+        if (!sup.children.includes(treeNode)) {
+          sup.children.push(treeNode)
+        }
+
+        sup = treeNode
+      }
+    }
+
+    return root.children
   }
 
   // async getPathToEvent(source: number, target: number) {

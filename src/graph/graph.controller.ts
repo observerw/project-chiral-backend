@@ -11,7 +11,7 @@ export class GraphController {
     private readonly graphService: GraphService,
   ) { }
 
-  @Get('relation/all')
+  @Get('relation')
   async getRelations(@Query() dto: NodeIdDto) {
     return this.graphService.getRelations(dto)
   }
@@ -28,11 +28,13 @@ export class GraphController {
 
   @Post('node')
   async createNode(@Body() dto: NodeIdDto) {
-    return this.graphService.createNode(dto)
+    return {}
+    // return this.graphService.createNode(dto)
   }
 
   @Delete('node')
   async removeNode(@Body() dto: NodeIdDto) {
-    return this.graphService.removeNode(dto)
+    return {}
+    // return this.graphService.removeNode(dto)
   }
 }

@@ -19,9 +19,9 @@ export declare const NodeType: {
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type NodeType = typeof NodeType[keyof typeof NodeType]
 export enum NodeEnum {
-  EVENT,
-  CHARA,
-  SCENE,
+  EVENT = 'EVENT',
+  CHARA = 'CHARA',
+  SCENE = 'SCENE',
 }
 
 export declare const RelationType: {
@@ -37,14 +37,14 @@ export declare const RelationType: {
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type RelationType = typeof RelationType[keyof typeof RelationType]
 export enum RelationEnum {
-  HAPPENED_AFTER,
-  LED_TO,
-  AFFECTED,
-  INCLUDES,
-  OCCURRED_IN,
-  HAS_RELATIONSHIP,
-  PARTICIPATED_IN,
-  CONTAINS,
+  HAPPENED_AFTER = 'HAPPENED_AFTER',
+  LED_TO = 'LED_TO',
+  AFFECTED = 'AFFECTED',
+  INCLUDES = 'INCLUDES',
+  OCCURRED_IN = 'OCCURRED_IN',
+  HAS_RELATIONSHIP = 'HAS_RELATIONSHIP',
+  PARTICIPATED_IN = 'PARTICIPATED_IN',
+  CONTAINS = 'CONTAINS',
 }
 
 export const RelationSchema = {

@@ -8,6 +8,7 @@ import { UpdateEventDto } from './dto/event/update-event.dto'
 import { CreateTodoDto } from './dto/todo/create-todo.dto'
 import { UpdateTodoDto } from './dto/todo/update-todo.dto'
 import { EventService } from './event.service'
+import { GetBatchDto } from './dto/event/get-batch.dto'
 
 @ApiTags('event')
 @Controller('event')
@@ -21,8 +22,13 @@ export class EventController {
     return this.eventService.get(id)
   }
 
+  @Get('batch')
+  async getBatch(@Query() { ids }: GetBatchDto) {
+    return this.eventService.getBatch(ids)
+  }
+
   @Get('list')
-  getAll(dto: GetAllEventQueryDto) {
+  async getAll(@Query() dto: GetAllEventQueryDto) {
     return this.eventService.getAll(dto)
   }
 

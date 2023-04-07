@@ -43,12 +43,14 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true, skipMissingProperties: false }))
 
   // prisma的生命周期和nest好像有点冲突，所以需要手动关闭
+  // FIXME 类型错误
   const prismaService = app.get(PrismaService)
-  await prismaService.enableShutdownHooks(app)
+  await prismaService.enableShutdownHooks(app as any)
 
   // 将prisma的异常转换为http异常
+  // FIXME 类型错误
   const { httpAdapter } = app.get(HttpAdapterHost)
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter as any))
 
   // 为fastify添加文件上传支持
   app.register(multipart)

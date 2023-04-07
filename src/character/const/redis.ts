@@ -1,1 +1,1 @@
-export const CharaTable = (projectId: string | number) => `chara:${projectId}`
+export const CharaTable = (projectId: string | number) => `${projectId}/chara`
