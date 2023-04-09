@@ -40,7 +40,7 @@ export class GraphService {
     const { from: fromType, to: toType } = RelationSchema[type]
     const query = await this.cypherService.execute`
     match (from:${fromType} ${{ id: from }}), (to:${toType} ${{ id: to }})
-    create (from)-[r:${type}]->(to)
+    merge (from)-[r:${type}]->(to)
     return r
     `.run()[0]
 
@@ -62,7 +62,7 @@ export class GraphService {
     const projectId = getProjectId()
 
     const query = await this.cypherService.execute`
-    create (n:${type} ${{ id, projectId, name }})
+    merge (n:${type} ${{ id, projectId, name }})
     return n
     `.run()[0]
 
