@@ -28,13 +28,11 @@ import { AiModule } from './ai/ai.module'
     }),
     PrismaModule.forRoot({
       isGlobal: true,
-      prismaServiceOptions: {
-        middlewares: [
-        ],
-      },
     }),
     RabbitMQModule.forRoot({
       uri: process.env.RMQ_URI as string,
+      defaultRpcTimeout: 50000,
+      defaultExchangeType: '',
     }),
     RedisModule.forRoot({
       config: {

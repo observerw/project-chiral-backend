@@ -3,7 +3,6 @@ import { ApiTags } from '@nestjs/swagger'
 import { NodeIdDto } from './dto/node-id.dto'
 import { RelationIdDto } from './dto/relation-id.dto'
 import { GraphService } from './graph.service'
-
 @ApiTags('graph')
 @Controller('graph')
 export class GraphController {
@@ -11,7 +10,7 @@ export class GraphController {
     private readonly graphService: GraphService,
   ) { }
 
-  @Get('relation')
+  @Get('relations')
   async getRelations(@Query() dto: NodeIdDto) {
     return this.graphService.getRelations(dto)
   }
