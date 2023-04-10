@@ -19,4 +19,9 @@ export class AiController {
   async updateEventDesc(@Param('id') id: number, @Body() dto: SummarizeDescDto) {
     return this.aiService.updateEventDesc(id, dto)
   }
+
+  @Post(':id/character')
+  async updateChara(@Param('id') id: number) {
+    return this.aiService.updateChara(id)
+  }
 }

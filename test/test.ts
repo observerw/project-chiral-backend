@@ -53,5 +53,5 @@ const main = async () => {
   await conn.close()
 }
 
-main()
+// main()
 

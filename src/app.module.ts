@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config'
 import { RequestContextModule } from 'nestjs-request-context'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { PrismaModule } from 'nestjs-prisma'
-import { RabbitMQModule } from '@nestjs-plus/rabbitmq'
 import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
@@ -28,11 +27,6 @@ import { AiModule } from './ai/ai.module'
     }),
     PrismaModule.forRoot({
       isGlobal: true,
-    }),
-    RabbitMQModule.forRoot({
-      uri: process.env.RMQ_URI as string,
-      defaultRpcTimeout: 50000,
-      defaultExchangeType: '',
     }),
     RedisModule.forRoot({
       config: {

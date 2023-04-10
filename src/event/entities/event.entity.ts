@@ -22,6 +22,7 @@ export class EventEntity implements Event {
   end: Date
 
   done: boolean
+  unresolved: string
 
   contentId: number | null
   projectId: number

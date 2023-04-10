@@ -1,8 +1,6 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
-import { Redis } from 'ioredis'
 import { getProjectId } from 'src/utils/get-header'
 import { GraphService } from 'src/graph/graph.service'
 import { CHARA } from 'test/test'
@@ -16,7 +14,6 @@ export class CharacterService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly graphService: GraphService,
-    @InjectRedis() private readonly redis: Redis,
   ) {}
 
   async get(id: number) {

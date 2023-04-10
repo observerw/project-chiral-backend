@@ -4,8 +4,7 @@ import { PrismaService } from 'nestjs-prisma'
 import { getProjectId } from 'src/utils/get-header'
 import { GraphService } from 'src/graph/graph.service'
 import { EVENT } from 'src/graph/schema'
-import { Redis } from 'ioredis'
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
+import { AmqpConnection } from '@nestjs-plus/rabbitmq'
 import type { UpdateContentDto } from './dto/content/update-content.dto'
 import type { CreateEventDto } from './dto/event/create-event.dto'
 import type { UpdateEventDto } from './dto/event/update-event.dto'
@@ -21,7 +20,7 @@ export class EventService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly graphService: GraphService,
-    @InjectRedis() private readonly redis: Redis,
+    private readonly rmq: AmqpConnection,
   ) {}
 
   // ---------------------------------- event ---------------------------------
@@ -128,6 +127,10 @@ export class EventService {
       where: { id },
       data: dto,
     })
+
+    if (dto.done !== undefined) {
+      this.rmq.publish('', 'event-done', { done: dto.done, id })
+    }
 
     return plainToInstance(EventEntity, result)
   }
