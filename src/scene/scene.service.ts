@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
+import { getProjectId } from 'src/utils/get-header'
 import type { CreateSceneDto } from './dto/create-scene.dto'
 import type { UpdateSceneDto } from './dto/update-scene.dto'
 import { SceneEntity } from './entities/scene.entity'
@@ -8,7 +9,7 @@ import { SceneEntity } from './entities/scene.entity'
 @Injectable()
 export class SceneService {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async get(id: number) {
@@ -19,28 +20,22 @@ export class SceneService {
     return plainToInstance(SceneEntity, scene)
   }
 
-  async create({ events, sup, subs, ...rest }: CreateSceneDto) {
+  async create(dto: CreateSceneDto) {
+    const projectId = getProjectId()
     const scene = await this.prismaService.scene.create({
       data: {
-        ...rest,
-        super: { connect: { id: sup } },
-        subs: { connect: subs?.map(id => ({ id })) },
-        events: { connect: events?.map(id => ({ id })) },
+        ...dto,
+        project: { connect: { id: projectId } },
       },
     })
 
     return plainToInstance(SceneEntity, scene)
   }
 
-  async update(id: number, { events, sup, subs, ...rest }: UpdateSceneDto) {
+  async update(id: number, dto: UpdateSceneDto) {
     const scene = await this.prismaService.scene.update({
       where: { id },
-      data: {
-        ...rest,
-        super: { connect: { id: sup } },
-        subs: { connect: subs?.map(id => ({ id })) },
-        events: { connect: events?.map(id => ({ id })) },
-      },
+      data: dto,
     })
 
     return plainToInstance(SceneEntity, scene)

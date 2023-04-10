@@ -25,7 +25,7 @@ export class FileService {
   }
 
   /**
-   * 上传文件并存在temp文件夹中，temp文件夹会定期清理
+   * 上传文件并保存在temp文件夹中，temp文件夹会定期清理
    */
   async uploadTempFile({ file }: UploadTempFileDto) {
     const fileName = this._hashName(file)

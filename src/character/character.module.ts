@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common'
+import { GraphModule } from 'src/graph/graph.module'
 import { CharacterService } from './character.service'
 import { CharacterController } from './character.controller'
-import { GraphService } from './graph/graph.service'
 
 @Module({
+  imports: [GraphModule],
   controllers: [CharacterController],
-  providers: [CharacterService, GraphService],
+  providers: [CharacterService],
 })
 export class CharacterModule {}

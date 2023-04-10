@@ -4,8 +4,11 @@ export class WorldviewEntity implements Worldview {
   id: number
   name: string
   description: string | null
-  content: string
   images: string[]
   deleted: Date | null
   superId: number | null
+
+  sup: number | null
+  projectId: number
+  contentId: number | null
 }

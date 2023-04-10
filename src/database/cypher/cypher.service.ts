@@ -3,6 +3,10 @@ import type { OnApplicationShutdown } from '@nestjs/common'
 import { Injectable } from '@nestjs/common'
 import { Connection } from 'cypher-query-builder'
 
+const removeUndefined = (data: Record<string, any>) => Object.keys(data)
+  .filter(key => data[key] !== null && data[key] !== undefined)
+  .reduce((acc, key) => ({ ...acc, [key]: data[key] }), {})
+
 @Injectable()
 export class CypherService extends Connection implements OnApplicationShutdown {
   constructor() {
@@ -46,7 +50,7 @@ export class CypherService extends Connection implements OnApplicationShutdown {
         query += strs[pos]
       }
       else {
-        const value = args[pos]
+        const value = removeUndefined(args[pos])
         query += typeof value === 'object'
         // 转换为不含双引号的JSON
           ? util.inspect(value)

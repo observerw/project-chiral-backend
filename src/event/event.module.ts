@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
-import { CypherService } from 'src/database/cypher/cypher.service'
+import { RabbitMQModule } from '@nestjs-plus/rabbitmq'
 import { EventService } from './event.service'
 import { EventController } from './event.controller'
-import { GraphModule } from './graph/graph.module'
-import { GraphService } from './graph/graph.service'
 
 @Module({
+  imports: [RabbitMQModule.forRoot({
+    uri: process.env.RMQ_URI as string,
+    defaultRpcTimeout: 50000,
+    defaultExchangeType: '',
+  })],
   controllers: [EventController],
-  providers: [EventService, PrismaService, CypherService, GraphService,
-  ],
-  imports: [GraphModule],
+  providers: [EventService, PrismaService],
 })
 export class EventModule {}

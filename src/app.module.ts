@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config'
 import { RequestContextModule } from 'nestjs-request-context'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { PrismaModule } from 'nestjs-prisma'
-import { RabbitMQModule } from '@nestjs-plus/rabbitmq'
 import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
@@ -13,11 +12,13 @@ import { ProjectModule } from './project/project.module'
 import { UserModule } from './user/user.module'
 import { CharacterModule } from './character/character.module'
 import { EventModule } from './event/event.module'
-import { CypherService } from './database/cypher/cypher.service'
 import { SceneModule } from './scene/scene.module'
 import { WorldviewModule } from './worldview/worldview.module'
 import { TaskService } from './task/task.service'
 import { FileModule } from './file/file.module'
+import { GraphModule } from './graph/graph.module'
+import { CypherService } from './database/cypher/cypher.service'
+import { AiModule } from './ai/ai.module'
 
 @Module({
   imports: [
@@ -26,13 +27,6 @@ import { FileModule } from './file/file.module'
     }),
     PrismaModule.forRoot({
       isGlobal: true,
-      prismaServiceOptions: {
-        middlewares: [
-        ],
-      },
-    }),
-    RabbitMQModule.forRoot({
-      uri: process.env.RMQ_URI as string,
     }),
     RedisModule.forRoot({
       config: {
@@ -49,11 +43,12 @@ import { FileModule } from './file/file.module'
     SceneModule,
     WorldviewModule,
     FileModule,
+    GraphModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    CypherService,
     // JWT接口权限验证
     // {
     //   provide: APP_GUARD,
@@ -65,6 +60,7 @@ import { FileModule } from './file/file.module'
       useClass: ClassSerializerInterceptor,
     },
     TaskService,
+    CypherService,
   ],
 })
 export class AppModule { }

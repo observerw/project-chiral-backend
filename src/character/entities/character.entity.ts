@@ -12,4 +12,6 @@ export class CharacterEntity implements Character {
   unit: number | null
   start: Date | null
   end: Date | null
+
+  projectId: number
 }

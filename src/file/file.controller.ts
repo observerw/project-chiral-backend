@@ -1,12 +1,13 @@
 import { FileInterceptor, MemoryStorageFile, UploadedFile } from '@blazity/nest-file-fastify'
 import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common'
-import { ApiConsumes } from '@nestjs/swagger'
+import { ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { RegisterFileDto } from './dto/register-file.dto'
 import { UnregisterFileDto } from './dto/unregister-file.dto'
 import { UploadFileDto } from './dto/upload-file.dto'
 import { UploadTempFileDto } from './dto/upload-temp-file.dto'
 import { FileService } from './file.service'
 
+@ApiTags('file')
 @Controller('file')
 export class FileController {
   constructor(

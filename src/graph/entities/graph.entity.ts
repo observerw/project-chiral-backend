@@ -1,7 +1,11 @@
-import type { NodeEntity } from './node/node.entity'
-import type { RelationEntity } from './relation/relation.entity'
+import { Type } from 'class-transformer'
+import { NodeEntity } from './node.entity'
+import { RelationEntity } from './relation.entity'
 
-export class GraphEntity<N extends NodeEntity = NodeEntity, R extends RelationEntity = RelationEntity> {
-  nodes: N[]
-  relations: R[]
+export class GraphEntity {
+  @Type(() => NodeEntity)
+  nodes: NodeEntity[]
+
+  @Type(() => RelationEntity)
+  relations: RelationEntity[]
 }

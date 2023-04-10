@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { SceneService } from './scene.service'
 import { CreateSceneDto } from './dto/create-scene.dto'
 import { UpdateSceneDto } from './dto/update-scene.dto'
 
+@ApiTags('scene')
 @Controller('scene')
 export class SceneController {
   constructor(private readonly sceneService: SceneService) {}

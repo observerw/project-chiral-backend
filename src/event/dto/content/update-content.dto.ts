@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/swagger'
-import { CreateContentDto } from './create-content.dto'
+import { IsOptional, IsString } from 'class-validator'
 
-export class UpdateContentDto extends PartialType(CreateContentDto) {}
+export class UpdateContentDto {
+  @IsString()
+  @IsOptional()
+  content?: string
+
+  @IsString()
+  @IsOptional()
+  cover?: string
+}

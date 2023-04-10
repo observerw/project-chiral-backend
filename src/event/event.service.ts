@@ -2,23 +2,25 @@ import { Injectable } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { PrismaService } from 'nestjs-prisma'
 import { getProjectId } from 'src/utils/get-header'
+import { GraphService } from 'src/graph/graph.service'
+import { EVENT } from 'src/graph/schema'
+import { AmqpConnection } from '@nestjs-plus/rabbitmq'
 import type { UpdateContentDto } from './dto/content/update-content.dto'
 import type { CreateEventDto } from './dto/event/create-event.dto'
 import type { UpdateEventDto } from './dto/event/update-event.dto'
 import { EventContentEntity } from './entities/event-content.entity'
 import { EventEntity } from './entities/event.entity'
-import { GraphService } from './graph/graph.service'
 import { EventTodoEntity } from './entities/event-todo.entity'
 import type { CreateTodoDto } from './dto/todo/create-todo.dto'
 import type { UpdateTodoDto } from './dto/todo/update-todo.dto'
 import type { GetAllEventQueryDto } from './dto/event/get-all-event-query-dto'
-import { EventDetailEntity } from './entities/event-detail.entity'
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly graphService: GraphService,
+    private readonly rmq: AmqpConnection,
   ) {}
 
   // ---------------------------------- event ---------------------------------
@@ -31,24 +33,12 @@ export class EventService {
     return plainToInstance(EventEntity, event)
   }
 
-  async getDetail(id: number) {
-    const { characters, scenes, sups, subs, ...event } = await this.prismaService.event.findUniqueOrThrow({
-      where: { id },
-      include: {
-        characters: { select: { id: true } },
-        scenes: { select: { id: true } },
-        sups: { select: { id: true } },
-        subs: { select: { id: true } },
-      },
+  async getBatch(ids: number[]) {
+    const events = await this.prismaService.event.findMany({
+      where: { id: { in: ids } },
     })
 
-    return plainToInstance(EventDetailEntity, {
-      ...event,
-      characters: characters.map(v => v.id),
-      scenes: scenes.map(v => v.id),
-      sups: sups.map(v => v.id),
-      subs: subs.map(v => v.id),
-    })
+    return events.map(v => plainToInstance(EventEntity, v))
   }
 
   async getAll({ size, page = 0 }: GetAllEventQueryDto) {
@@ -105,7 +95,7 @@ export class EventService {
     return events.map(v => plainToInstance(EventEntity, v))
   }
 
-  async create({ characters, scenes, sups, subs, ...rest }: CreateEventDto) {
+  async create(dto: CreateEventDto) {
     const projectId = getProjectId()
 
     // 生成事件序号
@@ -117,102 +107,41 @@ export class EventService {
 
     const result = await this.prismaService.event.create({
       data: {
-        ...rest,
+        ...dto,
         projectId,
         serial,
         content: { create: {} },
-        type: subs?.length === 0 ? 'ATOM' : 'COLLECTION',
-        characters: { connect: characters?.map(id => ({ id })) },
-        scenes: { connect: scenes?.map(id => ({ id })) },
-        sups: { connect: sups?.map(id => ({ id })) },
-        subs: { connect: subs?.map(id => ({ id })) },
-      },
-      include: {
-        characters: { select: { id: true } },
-        scenes: { select: { id: true } },
-        sups: { select: { id: true } },
-        subs: { select: { id: true } },
       },
     })
 
-    await this.graphService.create(result.id)
+    await this.graphService.createNode(
+      { type: EVENT, id: result.id },
+      `${result.serial}. ${result.name}`,
+    )
 
-    return plainToInstance(EventDetailEntity, {
-      ...result,
-      characters: result.characters.map(v => v.id),
-      scenes: result.scenes.map(v => v.id),
-      sups: result.sups.map(v => v.id),
-      subs: result.subs.map(v => v.id),
-    })
+    return plainToInstance(EventEntity, result)
   }
 
-  async update(id: number, { characters, scenes, sups, subs, ...rest }: UpdateEventDto) {
+  async update(id: number, dto: UpdateEventDto) {
     const result = await this.prismaService.event.update({
       where: { id },
-      data: {
-        ...rest,
-        type: subs?.length === 0 ? 'ATOM' : 'COLLECTION',
-        characters: { connect: characters?.map(id => ({ id })) },
-        scenes: { connect: scenes?.map(id => ({ id })) },
-        sups: { connect: sups?.map(id => ({ id })) },
-        subs: { connect: subs?.map(id => ({ id })) },
-      },
-      include: {
-        characters: { select: { id: true } },
-        scenes: { select: { id: true } },
-        sups: { select: { id: true } },
-        subs: { select: { id: true } },
-      },
+      data: dto,
     })
 
-    return plainToInstance(EventDetailEntity, {
-      ...result,
-      characters: result.characters.map(v => v.id),
-      scenes: result.scenes.map(v => v.id),
-      sups: result.sups.map(v => v.id),
-      subs: result.subs.map(v => v.id),
-    })
+    if (dto.done !== undefined) {
+      this.rmq.publish('', 'event-done', { done: dto.done, id })
+    }
+
+    return plainToInstance(EventEntity, result)
   }
 
   async remove(id: number) {
     // TODO 软删除
     const result = await this.prismaService.event.delete({
       where: { id },
-      include: {
-        characters: { select: { id: true } },
-        scenes: { select: { id: true } },
-        sups: { select: { id: true } },
-        subs: { select: { id: true } },
-      },
     })
 
-    return plainToInstance(EventDetailEntity, {
-      ...result,
-      characters: result.characters.map(v => v.id),
-      scenes: result.scenes.map(v => v.id),
-      sups: result.sups.map(v => v.id),
-      subs: result.subs.map(v => v.id),
-    })
-  }
-
-  async connect(id: number, type: 'scenes' | 'characters' | 'sups' | 'subs', connectIds: number[]) {
-    const result = await this.prismaService.event.update({
-      where: { id },
-      data: {
-        [type]: { connect: connectIds.map(id => ({ id })) },
-      },
-    })
-
-    return plainToInstance(EventEntity, result)
-  }
-
-  async disconnect(id: number, type: 'scenes' | 'characters' | 'sups' | 'subs', disconnectIds: number[]) {
-    const result = await this.prismaService.event.update({
-      where: { id },
-      data: {
-        [type]: { disconnect: disconnectIds.map(id => ({ id })) },
-      },
-    })
+    await this.graphService.removeNode({ type: EVENT, id })
 
     return plainToInstance(EventEntity, result)
   }
@@ -220,6 +149,13 @@ export class EventService {
   // ---------------------------------- content ---------------------------------
 
   async getContent(eventId: number) {
+    // 优先走缓存
+    // const cache = await this.redis.get(EventContent(eventId))
+    // if (cache) {
+    //   const content = JSON.parse(cache) as EventContentEntity
+    //   return plainToInstance(EventContentEntity, content)
+    // }
+
     const { content } = await this.prismaService.event.findUniqueOrThrow({
       where: { id: eventId },
       select: { content: true },
