@@ -149,13 +149,6 @@ export class EventService {
   // ---------------------------------- content ---------------------------------
 
   async getContent(eventId: number) {
-    // 优先走缓存
-    // const cache = await this.redis.get(EventContent(eventId))
-    // if (cache) {
-    //   const content = JSON.parse(cache) as EventContentEntity
-    //   return plainToInstance(EventContentEntity, content)
-    // }
-
     const { content } = await this.prismaService.event.findUniqueOrThrow({
       where: { id: eventId },
       select: { content: true },

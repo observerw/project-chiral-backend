@@ -50,10 +50,10 @@ export class CypherService extends Connection implements OnApplicationShutdown {
         query += strs[pos]
       }
       else {
-        const value = removeUndefined(args[pos])
+        const value = args[pos]
         query += typeof value === 'object'
         // 转换为不含双引号的JSON
-          ? util.inspect(value)
+          ? util.inspect(removeUndefined(value))
           : `${value}`
       }
     }

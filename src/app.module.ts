@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config'
 import { RequestContextModule } from 'nestjs-request-context'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { PrismaModule } from 'nestjs-prisma'
-import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -28,11 +27,11 @@ import { AiModule } from './ai/ai.module'
     PrismaModule.forRoot({
       isGlobal: true,
     }),
-    RedisModule.forRoot({
-      config: {
-        url: process.env.REDIS_URL as string,
-      },
-    }),
+    // RedisModule.forRoot({
+    //   config: {
+    //     url: process.env.REDIS_URL as string,
+    //   },
+    // }),
     ScheduleModule.forRoot(),
     RequestContextModule,
     EventModule,
