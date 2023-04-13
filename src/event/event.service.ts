@@ -125,7 +125,10 @@ export class EventService {
   async update(id: number, dto: UpdateEventDto) {
     const result = await this.prismaService.event.update({
       where: { id },
-      data: dto,
+      data: {
+        ...dto,
+        unresolved: dto.unresolved as object,
+      },
     })
 
     if (dto.done !== undefined) {

@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { EventType } from '@prisma/client'
 import type { Event } from '@prisma/client'
-
 export class EventEntity implements Event {
   id: number
   name: string
@@ -22,7 +21,8 @@ export class EventEntity implements Event {
   end: Date
 
   done: boolean
-  unresolved: string
+
+  unresolved: object
 
   contentId: number | null
   projectId: number

@@ -91,7 +91,7 @@ export class AiService {
     if (code !== 0) { throw new InternalServerErrorException(message) }
 
     await this.eventService.update(id, {
-      unresolved: JSON.stringify(data.unresolved),
+      unresolved: data.unresolved,
     })
 
     // 把现有人物关系全部清除

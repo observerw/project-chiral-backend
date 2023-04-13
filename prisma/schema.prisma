@@ -56,7 +56,7 @@ model Event {
 
   done Boolean @default(false)
 
-  unresolved String @default("[]")
+  unresolved Json @default("[]")
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int

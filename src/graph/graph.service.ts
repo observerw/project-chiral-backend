@@ -42,9 +42,9 @@ export class GraphService {
     match (from:${fromType} ${{ id: from }}), (to:${toType} ${{ id: to }})
     merge (from)-[r:${type}]->(to)
     return r
-    `.run()[0]
+    `.run()
 
-    return plainToInstance(RelationEntity, query?.r)
+    return query.map(q => plainToInstance(RelationEntity, q?.r))
   }
 
   async removeRelation({ from, to, type }: RelationIdDto) {
@@ -53,9 +53,9 @@ export class GraphService {
     match (from:${fromType} ${{ id: from }})-[r:${type}]->(to:${toType} ${{ id: to }})
     delete r
     return r
-    `.run()[0]
+    `.run()
 
-    return plainToInstance(RelationEntity, query?.r)
+    return query.map(q => plainToInstance(RelationEntity, q?.r))
   }
 
   async createNode({ type, id }: NodeIdDto, name: string) {

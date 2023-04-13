@@ -11,7 +11,7 @@ class CharaOption {
   score: number
 }
 
-class Unresolved {
+export class Unresolved {
   name: string
   @Type(() => CharaOption)
   options: CharaOption[]

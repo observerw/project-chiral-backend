@@ -1,13 +1,17 @@
 import { PartialType } from '@nestjs/swagger'
-import { IsBoolean, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsOptional } from 'class-validator'
+import { Type } from 'class-transformer'
+import { Unresolved } from 'src/ai/dto/chara-options.dto'
 import { CreateEventDto } from './create-event.dto'
 
 export class UpdateEventDto extends PartialType(CreateEventDto) {
   @IsBoolean()
   @IsOptional()
+  @Type(() => Boolean)
   done?: boolean
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  unresolved?: string
+  @Type(() => Unresolved)
+  unresolved?: Unresolved[]
 }
