@@ -4,6 +4,7 @@ import { RequestContextModule } from 'nestjs-request-context'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import { PrismaModule } from 'nestjs-prisma'
 import { ScheduleModule } from '@nestjs/schedule'
+import { HttpModule } from '@nestjs/axios'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
@@ -18,6 +19,7 @@ import { FileModule } from './file/file.module'
 import { GraphModule } from './graph/graph.module'
 import { CypherService } from './database/cypher/cypher.service'
 import { AiModule } from './ai/ai.module'
+import { GraphApiService } from './api/graph-api.service'
 
 @Module({
   imports: [
@@ -44,6 +46,7 @@ import { AiModule } from './ai/ai.module'
     FileModule,
     GraphModule,
     AiModule,
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [
@@ -60,6 +63,7 @@ import { AiModule } from './ai/ai.module'
     },
     TaskService,
     CypherService,
+    GraphApiService,
   ],
 })
 export class AppModule { }
