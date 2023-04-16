@@ -21,24 +21,6 @@ export class CypherService extends Connection implements OnApplicationShutdown {
     await this.close()
   }
 
-  /**
-   * 自动添加 UUID属性
-   */
-  createWithUUID(
-    ...args: Parameters<typeof Connection.prototype.create>
-  ) {
-    return this.create(...args)
-      .setVariables({ id: 'apoc.create.uuid()' })
-  }
-
-  createNodeWithUUID(
-    ...args: Parameters<typeof Connection.prototype.createNode>
-  ) {
-    return this.createNode(...args)
-      .setVariables({ id: 'apoc.create.uuid()' })
-  }
-
-  // FIXME 待测试
   execute(
     strs: TemplateStringsArray,
     ...args: any[]

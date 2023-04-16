@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator'
+import { IsInt, IsOptional, IsString } from 'class-validator'
 
 export class CreateWorldviewDto {
   @IsString()
@@ -7,4 +7,11 @@ export class CreateWorldviewDto {
   @IsString()
   @IsOptional()
   description?: string
+
+  @IsString()
+  path: string
+
+  @IsInt()
+  @IsOptional()
+  supId?: number
 }

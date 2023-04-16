@@ -126,22 +126,17 @@ model Scene {
 // ----------------------------------- 世界观 -------------------------------------
 
 model Worldview {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
+  path String
 
-  name   String   @unique
-  images String[]
+  name String
 
   deleted DateTime?
 
-  // 文件夹结构
-  super Worldview?  @relation("contains", fields: [sup], references: [id])
-  sup   Int?        @unique
-  subs  Worldview[] @relation("contains")
-
-  project   Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId Int
   content   WorldviewContent? @relation()
   contentId Int?
+  project   Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId Int
 }
 
 model WorldviewContent {

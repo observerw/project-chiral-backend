@@ -14,6 +14,11 @@ export class WorldviewController {
     return this.worldviewService.create(dto)
   }
 
+  @Get()
+  getAll() {
+    return this.worldviewService.getAll()
+  }
+
   @Get(':id')
   get(@Param('id') id: number) {
     return this.worldviewService.get(id)

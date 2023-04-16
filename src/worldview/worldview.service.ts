@@ -18,6 +18,7 @@ export class WorldviewService {
       data: {
         ...dto,
         project: { connect: { id: projectId } },
+        content: { create: {} },
       },
     })
 
@@ -54,6 +55,13 @@ export class WorldviewService {
   async remove(id: number) {
     const worldview = await this.prismaService.worldview.delete({
       where: { id },
+    })
+
+    // 删除子节点
+    await this.prismaService.worldview.deleteMany({
+      where: {
+        path: { startsWith: worldview.path },
+      },
     })
 
     return plainToInstance(WorldviewEntity, worldview)

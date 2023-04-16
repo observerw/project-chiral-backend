@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { NodeIdDto } from './dto/node-id.dto'
 import { RelationIdDto } from './dto/relation-id.dto'
 import { GraphService } from './graph.service'
+
 @ApiTags('graph')
 @Controller('graph')
 export class GraphController {
