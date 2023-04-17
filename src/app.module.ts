@@ -19,7 +19,6 @@ import { FileModule } from './file/file.module'
 import { GraphModule } from './graph/graph.module'
 import { CypherService } from './database/cypher/cypher.service'
 import { AiModule } from './ai/ai.module'
-import { GraphApiService } from './api/graph-api.service'
 
 @Module({
   imports: [
@@ -63,7 +62,6 @@ import { GraphApiService } from './api/graph-api.service'
     },
     TaskService,
     CypherService,
-    GraphApiService,
   ],
 })
 export class AppModule { }
